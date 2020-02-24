@@ -1,0 +1,44 @@
+<MainScreen>:
+    name: 'main'
+    FloatLayout:
+        size_hint: None, None
+
+    Label:
+        text: "Hardware Testing 3.0"
+        color: 0, 1, 0, 1
+        x: root.width * .5
+        y: root.height * .5
+
+    DPEAButton:
+        text: "X"
+        font_size: 20
+        size: 60, 60
+        x: root.width * .97
+        y: root.height * .96
+        color: 1, 0, 0, 1
+        on_press: root.cleanup()
+    DPEAButton:
+        id:toggle_servo_switch
+        text: "Motors"
+        size: 300, 150
+        x: (root.width * 0.2) - 150
+        y: root.height * 0.5
+        color: 0, 1, 0, 1
+        on_press: root.toggleServoSwitch()
+    DPEAButton:
+        text: "Drivers"
+        id: servo
+        size: 300, 150
+        font_size: 15
+        x: (root.width * 0.5) - 150
+        y: root.height * 0.5
+        color: 0, 0, 1, 1
+        on_press: root.servoPressed()
+    DPEAButton:
+        id:toggle_talon_switch
+        text: "Switches"
+        size: 300, 150
+        x: (root.width * 0.8) - 150
+        y: root.height * 0.5
+        color: 1, 1, 0, 1
+        on_press: root.toggleTalonSwitch()
