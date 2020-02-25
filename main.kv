@@ -5,9 +5,20 @@
 
     Label:
         text: "Hardware Testing 3.0"
-        color: 0, 1, 0, 1
-        x: root.width * .5
-        y: root.height * .5
+        id: toggle_motor_label
+        size: 100, 100
+        font_size: 100
+        pos_hint:{"y":.3,"x": 0}
+        color: 0, 0, 0, .8
+        bold: True
+
+    Label:
+        text: "Copywrite © Dos Pueblos Engineering Academy 2020"
+        id: toggle_motor_label
+        size: 100, 100
+        font_size: 30
+        pos_hint:{"y":.23,"x": 0}
+        color: 0, 0, 0, .5
 
     DPEAButton:
         text: "X"
@@ -18,27 +29,51 @@
         color: 1, 0, 0, 1
         on_press: root.cleanup()
     DPEAButton:
-        id:toggle_servo_switch
+        id:motors
         text: "Motors"
         size: 300, 150
         x: (root.width * 0.2) - 150
-        y: root.height * 0.5
+        y: root.height * 0.45
         color: 0, 1, 0, 1
-        on_press: root.toggleServoSwitch()
+        on_press: root.motors()
     DPEAButton:
         text: "Drivers"
-        id: servo
+        id: drivers
         size: 300, 150
         font_size: 15
         x: (root.width * 0.5) - 150
-        y: root.height * 0.5
+        y: root.height * 0.45
         color: 0, 0, 1, 1
-        on_press: root.servoPressed()
+        on_press: root.drivers()
     DPEAButton:
-        id:toggle_talon_switch
+        id:switches
         text: "Switches"
         size: 300, 150
         x: (root.width * 0.8) - 150
-        y: root.height * 0.5
+        y: root.height * 0.45
         color: 1, 1, 0, 1
-        on_press: root.toggleTalonSwitch()
+        on_press: root.switches()
+
+    ImageButton:
+        id: switches
+        source: "limitswitch.png"
+        size: 300, 300
+        x: (root.width * 0.8) - 150
+        y: root.height * 0.1
+        on_press: root.stanfordPressed()
+
+    ImageButton:
+        id: drivers
+        source: "TALON.jpg"
+        size: 300, 300
+        x: (root.width * 0.5) - 150
+        y: root.height * 0.1
+        on_press: root.stanfordPressed()
+
+    ImageButton:
+        id: motors
+        source: "servomotor.png"
+        size: 300, 300
+        x: (root.width * 0.2) - 150
+        y: root.height * 0.1
+        on_press: root.stanfordPressed()

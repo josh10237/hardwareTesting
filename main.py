@@ -96,63 +96,15 @@ class MainScreen(Screen):
                 print("yeepie 1")
 
 
-    def toggleServoSwitch(self):
-        global servo
-        if(servo == False):
-            self.ids.toggle_servo_switch.text = "Direction Switch On"
-            servo = True
-            Thread(target=self.servoThread).start()
-            Thread.daemon = True
-        else:
-            self.ids.toggle_servo_switch.text = "Direction Switch Off"
-            servo = False
-    def toggleTalonSwitch(self):
-        global talon
-        if(talon == False):
-            self.ids.toggle_talon_switch.text = "Stop Switch On"
-            talon = True
-            Thread(target=self.talonThread).start()
-            Thread.daemon = True
-        else:
-            self.ids.toggle_talon_switch.text = "Stop Switch Off"
-            talon = False
+    def switches(self):
+        SCREEN_MANAGER.current =
 
-    def toggleProximity(self):
-        global cytron
-        if cytron == False:
-            self.ids.toggle_proximity.text = "Proximity Switch On"
-            cytron = True
-            Thread(target=self.cytronThread).start()
-            Thread.daemon = True
-        else:
-            self.ids.toggle_proximity.text = "Proximity Switch Off"
-            cytron = False
+    def drivers(self):
+
+    def motors(self):
 
 
-    def servoPressed(self):
-        global pos
-        cyprus.initialize()  # initialize the RPiMIB and establish communication
-        cyprus.setup_servo(2)  # sets up P4 on the RPiMIB as a RC servo style output
-        if pos:
-            cyprus.set_servo_position(1,0)
-            pos = False
-        else:
-            cyprus.set_servo_position(1,1)
-            pos = True
 
-    def pressed(self):
-        """
-        Function called on button touch event for button with id: testButton
-        :return: None
-        """
-        global togServo
-        if(togServo == 1):
-            cyprus.set_servo_position(1, 0)
-            togServo = 0
-            # 2 specifies port P5, i is a float that specifies speed
-        else:
-            cyprus.set_servo_position(1, 1)
-            togServo = 1
 
 
     def cleanup(self):
@@ -161,32 +113,8 @@ class MainScreen(Screen):
         spi.close()
         GPIO.cleanup()
         quit()
-    def admin_action(self):
-        """
-        Hidden admin button touch event. Transitions to passCodeScreen.
-        This method is called from pidev/kivy/PassCodeScreen.kv
-        :return: None
-        """
-        SCREEN_MANAGER.current = 'passCode'
 
 
-class AdminScreen(Screen):
-    """
-    Class to handle the AdminScreen and its functionality
-    """
-
-    def __init__(self, **kwargs):
-        """
-        Load the AdminScreen.kv file. Set the necessary names of the screens for the PassCodeScreen to transition to.
-        Lastly super Screen's __init__
-        :param kwargs: Normal kivy.uix.screenmanager.Screen attributes
-        """
-        Builder.load_file('AdminScreen.kv')
-
-        PassCodeScreen.set_admin_events_screen(ADMIN_SCREEN_NAME)  # Specify screen name to transition to after correct password
-        PassCodeScreen.set_transition_back_screen(MAIN_SCREEN_NAME)  # set screen name to transition to if "Back to Game is pressed"
-
-        super(AdminScreen, self).__init__(**kwargs)
 
     @staticmethod
     def transition_back():
@@ -217,6 +145,10 @@ Widget additions
 
 Builder.load_file('main.kv')
 SCREEN_MANAGER.add_widget(MainScreen(name=MAIN_SCREEN_NAME))
+SCREEN_MANAGER.add_widget(MainScreen(name="Switches"))
+SCREEN_MANAGER.add_widget(MainScreen(name="Drivers"))
+SCREEN_MANAGER.add_widget(MainScreen(name="Motors"))
+
 
 
 """
