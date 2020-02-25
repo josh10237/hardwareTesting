@@ -24,7 +24,6 @@ MIXPANEL = MixPanel("Project Name", MIXPANEL_TOKEN)
 
 SCREEN_MANAGER = ScreenManager()
 MAIN_SCREEN_NAME = 'main'
-ADMIN_SCREEN_NAME = 'admin'
 cyprus.initialize()
 
 
@@ -96,14 +95,6 @@ class MainScreen(Screen):
                 print("yeepie 1")
 
 
-    def switches(self):
-        SCREEN_MANAGER.current =
-
-    def drivers(self):
-
-    def motors(self):
-
-
 
 
 
@@ -139,21 +130,26 @@ class MainScreen(Screen):
         :return: None
         """
         quit()
-"""
-Widget additions
-"""
+
+class SwitchScreen(Screen):
+    pass
+
+class DriverScreen(Screen):
+    pass
+
+class MotorScreen(Screen):
+    pass
+
 
 Builder.load_file('main.kv')
+Builder.load_file('switches.kv')
+Builder.load_file('drivers.kv')
+Builder.load_file('motors.kv')
 SCREEN_MANAGER.add_widget(MainScreen(name=MAIN_SCREEN_NAME))
-SCREEN_MANAGER.add_widget(MainScreen(name="Switches"))
-SCREEN_MANAGER.add_widget(MainScreen(name="Drivers"))
-SCREEN_MANAGER.add_widget(MainScreen(name="Motors"))
+SCREEN_MANAGER.add_widget(SwitchScreen(name="switches"))
+SCREEN_MANAGER.add_widget(DriverScreen(name="drivers"))
+SCREEN_MANAGER.add_widget(MotorScreen(name="motors"))
 
-
-
-"""
-MixPanel
-"""
 
 
 def send_event(event_name):

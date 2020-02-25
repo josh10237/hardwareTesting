@@ -35,7 +35,9 @@
         x: (root.width * 0.2) - 150
         y: root.height * 0.45
         color: 0, 1, 0, 1
-        on_press: root.motors()
+        on_press:
+            root.manager.transition.direction = 'left'
+            root.manager.current = 'motors'
     DPEAButton:
         text: "Drivers"
         id: drivers
@@ -44,15 +46,19 @@
         x: (root.width * 0.5) - 150
         y: root.height * 0.45
         color: 0, 0, 1, 1
-        on_press: root.drivers()
+        on_press:
+            root.manager.transition.direction = 'left'
+            root.manager.current = 'drivers'
     DPEAButton:
         id:switches
         text: "Switches"
         size: 300, 150
         x: (root.width * 0.8) - 150
         y: root.height * 0.45
-        color: 1, 1, 0, 1
-        on_press: root.switches()
+        color: 1, 0, 0, 1
+        on_press:
+            root.manager.transition.direction = 'left'
+            root.manager.current = 'switches'
 
     ImageButton:
         id: switches
