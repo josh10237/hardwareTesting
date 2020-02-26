@@ -94,6 +94,15 @@ class MainScreen(Screen):
                 sleep(.1)
                 print("yeepie 1")
 
+    def motorpressed(self):
+        SCREEN_MANAGER.current = "motors"
+
+    def driverpressed(self):
+        SCREEN_MANAGER.current = "drivers"
+
+    def switchpressed(self):
+        SCREEN_MANAGER.current = "switches"
+
 
 
 
@@ -107,38 +116,44 @@ class MainScreen(Screen):
 
 
 
-    @staticmethod
-    def transition_back():
-        """
-        Transition back to the main screen
-        :return:
-        """
-        SCREEN_MANAGER.current = MAIN_SCREEN_NAME
-
-    @staticmethod
-    def shutdown():
-        """
-        Shutdown the system. This should free all steppers and do any cleanup necessary
-        :return: None
-        """
-        os.system("sudo shutdown now")
-
-    @staticmethod
-    def exit_program():
-        """
-        Quit the program. This should free all steppers and do any cleanup necessary
-        :return: None
-        """
-        quit()
 
 class SwitchScreen(Screen):
-    pass
+    def back(self):
+        SCREEN_MANAGER.current = MAIN_SCREEN_NAME
+
+    def lefty(self):
+        #SCREEN_MANAGER.current =
+        pass
+
+    def righty(self):
+        #SCREEN_MANAGER.current =
+        pass
+
 
 class DriverScreen(Screen):
-    pass
+    def back(self):
+        SCREEN_MANAGER.current = MAIN_SCREEN_NAME
+
+    def lefty(self):
+        # SCREEN_MANAGER.current =
+        pass
+
+    def righty(self):
+        # SCREEN_MANAGER.current =
+        pass
+
 
 class MotorScreen(Screen):
-    pass
+    def back(self):
+        SCREEN_MANAGER.current = MAIN_SCREEN_NAME
+
+    def lefty(self):
+        # SCREEN_MANAGER.current =
+        pass
+
+    def righty(self):
+        # SCREEN_MANAGER.current =
+        pass
 
 
 Builder.load_file('main.kv')

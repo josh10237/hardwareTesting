@@ -5,51 +5,36 @@
 
     Label:
         text: "Drivers"
-        id: drivers
         size: 100, 100
         font_size: 100
         pos_hint:{"y":.3,"x": 0}
         color: 0, 0, 0, .8
         bold: True
 
-
     DPEAButton:
-        text: "X"
-        font_size: 20
-        size: 60, 60
-        x: root.width * .97
-        y: root.height * .96
-        color: 1, 0, 0, 1
-        on_press: root.cleanup()
-
-    DPEAButton:
-        text: "Talon"
-        id: talon
+        text: "Limit Switch"
         size: 500, 100
         font_size: 15
         x: (root.width * 0.3) - 250
         y: root.height * 0.45
         color: 0, 1, 1, 1
-        on_press: root.drivers()
+        on_press: root.righty()
     DPEAButton:
-        id: cytron
-        text: "Cytron"
+        text: "Proximity Sensor"
         size: 500, 100
         x: (root.width * 0.7) - 250
         y: root.height * 0.45
         color: 1, 1, 0, 1
-        on_press: root.switches()
+        on_press: root.lefty()
 
     ImageButton:
-        id: talonimg
-        source: "TALON.jpg"
+        source: "limitswitch.png"
         size: 300, 300
         x: (root.width * 0.3) - 150
         y: root.height * 0.1
 
     ImageButton:
-        id: cytronimg
-        source: "cytron.png"
+        source: "proximitysensor.jpg"
         size: 300, 300
         x: (root.width * 0.7) - 150
         y: root.height * 0.1
@@ -60,8 +45,6 @@
         size: 100, 100
         x: 10
         y: root.height * 0.9
-        on_press:
-            root.manager.transition.direction = 'right'
-            root.manager.current = 'main'
+        on_press: root.back()
 
 

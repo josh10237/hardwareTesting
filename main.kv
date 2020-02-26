@@ -38,6 +38,7 @@
         on_press:
             root.manager.transition.direction = 'left'
             root.manager.current = 'motors'
+            print("motors")
     DPEAButton:
         text: "Drivers"
         id: drivers
@@ -49,6 +50,7 @@
         on_press:
             root.manager.transition.direction = 'left'
             root.manager.current = 'drivers'
+            print("drivers")
     DPEAButton:
         id:switches
         text: "Switches"
@@ -59,6 +61,7 @@
         on_press:
             root.manager.transition.direction = 'left'
             root.manager.current = 'switches'
+            print("switches")
 
     ImageButton:
         id: switches
