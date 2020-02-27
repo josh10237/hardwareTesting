@@ -1,0 +1,43 @@
+<SwitchMethodsScreen>:
+    name: 'switchMethods'
+    on_enter: root.startThread()
+    FloatLayout:
+        size_hint: None, None
+
+    Label:
+        text: "Proximity Switch Testing"
+        size: 100, 100
+        font_size: 100
+        pos_hint:{"y":.3,"x": 0}
+        color: 0, 0, 0, .8
+        bold: True
+
+    ImageButton:
+        id: back
+        source: "backarrow.png"
+        size: 100, 100
+        x: 10
+        y: root.height * 0.9
+        on_press: root.back()
+
+    Label:
+        text: "Plug into port P5"
+        size: 100, 100
+        font_size: 50
+        pos_hint:{"y":.2,"x": 0}
+        color: 0, 0, 0, .5
+
+    ImageButton:
+        source: "proximitysensor.jpg"
+        size: 300, 300
+        x: (root.width * 0.5) - 150
+        y: root.height * 0.3
+
+    Label:
+        text: "Not Sensing"
+        id: toggle_sensing_label
+        size: 100, 100
+        bold: True
+        font_size: 50
+        pos_hint:{"y":-.33,"x": 0}
+        color: .8, 0, 0, .8

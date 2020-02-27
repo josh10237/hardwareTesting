@@ -14,6 +14,7 @@ from Slush.Devices import L6470Registers
 from pidev.Cyprus_Commands import Cyprus_Commands_RPi as cyprus
 spi = spidev.SpiDev()
 from pidev.MixPanel import MixPanel
+import datetime
 from pidev.kivy.PassCodeScreen import PassCodeScreen
 from pidev.kivy.PauseScreen import PauseScreen
 from pidev.kivy import DPEAButton
@@ -51,6 +52,7 @@ class MainScreen(Screen):
     global cytron
     global servo
     global talon
+    global checking
     pos = False
     servo = False
     talon = False
@@ -95,12 +97,15 @@ class MainScreen(Screen):
                 print("yeepie 1")
 
     def motorpressed(self):
+        SCREEN_MANAGER.transition.direction = 'left'
         SCREEN_MANAGER.current = "motors"
 
     def driverpressed(self):
+        SCREEN_MANAGER.transition.direction = 'left'
         SCREEN_MANAGER.current = "drivers"
 
     def switchpressed(self):
+        SCREEN_MANAGER.transition.direction = 'left'
         SCREEN_MANAGER.current = "switches"
 
 
@@ -119,19 +124,21 @@ class MainScreen(Screen):
 
 class SwitchScreen(Screen):
     def back(self):
+        SCREEN_MANAGER.transition.direction = 'right'
         SCREEN_MANAGER.current = MAIN_SCREEN_NAME
 
     def lefty(self):
-        #SCREEN_MANAGER.current =
-        pass
+        SCREEN_MANAGER.transition.direction = 'left'
+        SCREEN_MANAGER.current = 'switchMethods'
 
     def righty(self):
-        #SCREEN_MANAGER.current =
-        pass
+        SCREEN_MANAGER.transition.direction = 'left'
+        SCREEN_MANAGER.current = 'switchMethods'
 
 
 class DriverScreen(Screen):
     def back(self):
+        SCREEN_MANAGER.transition.direction = 'right'
         SCREEN_MANAGER.current = MAIN_SCREEN_NAME
 
     def lefty(self):
@@ -145,6 +152,7 @@ class DriverScreen(Screen):
 
 class MotorScreen(Screen):
     def back(self):
+        SCREEN_MANAGER.transition.direction = 'right'
         SCREEN_MANAGER.current = MAIN_SCREEN_NAME
 
     def lefty(self):
@@ -155,15 +163,53 @@ class MotorScreen(Screen):
         # SCREEN_MANAGER.current =
         pass
 
+class SwitchMethodsScreen(Screen):
+    def back(self):
+        global checking
+        checking = False
+        SCREEN_MANAGER.transition.direction = 'right'
+        SCREEN_MANAGER.current = 'switches'
+
+    def startThread(self):
+        print("recived on enter")
+        global checking
+        checking = True
+        Thread(target=self.switchThread).start()
+        Thread.daemon = True
+
+    def switchThread(self):
+        global checking
+        print("thread method")
+        while checking:
+            if(cyprus.read_gpio() & 0b0001):
+                sleep(.1)
+                if (cyprus.read_gpio() & 0b0001):
+                    print('sensing')
+                    self.ids.toggle_sensing_label.text = "Sensing"
+                    self.ids.toggle_sensing_label.color = (0, 1, 0, .8)
+            else:
+                print("not sensing")
+                self.ids.toggle_sensing_label.text = "Not Sensing"
+                self.ids.toggle_sensing_label.color = (1, 0, 0, .8)
 
 Builder.load_file('main.kv')
 Builder.load_file('switches.kv')
 Builder.load_file('drivers.kv')
 Builder.load_file('motors.kv')
+Builder.load_file('switchMethods.kv')
+# Builder.load_file('servoMethods.kv')
+# Builder.load_file('stepperMethods.kv')
+# Builder.load_file('talonMethods.kv')
+# Builder.load_file('cytronMethods.kv')
 SCREEN_MANAGER.add_widget(MainScreen(name=MAIN_SCREEN_NAME))
 SCREEN_MANAGER.add_widget(SwitchScreen(name="switches"))
 SCREEN_MANAGER.add_widget(DriverScreen(name="drivers"))
 SCREEN_MANAGER.add_widget(MotorScreen(name="motors"))
+SCREEN_MANAGER.add_widget(SwitchMethodsScreen(name="switchMethods"))
+# SCREEN_MANAGER.add_widget(ServoMethodsScreen(name="servoMethods"))
+# SCREEN_MANAGER.add_widget(StepperMethodsScreen(name="stepperMethods"))
+# SCREEN_MANAGER.add_widget(TalonMethodsScreen(name="talonMethods"))
+# SCREEN_MANAGER.add_widget(CytronMethodsScreen(name="cytronMethods"))
 
 
 
