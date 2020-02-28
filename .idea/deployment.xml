@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" autoUpload="Always" serverName="pi@widget10-pi.local" createEmptyFolders="true" autoUploadExternalChanges="true">
+  <component name="PublishConfigData" autoUpload="Always" serverName="pi@widget08-pi.local" createEmptyFolders="true" autoUploadExternalChanges="true">
     <serverData>
-      <paths name="pi@widget10-pi.local">
+      <paths name="pi@widget08-pi.local">
         <serverdata>
           <mappings>
             <mapping deploy="/home/pi/Documents/hardwareTesting" local="$PROJECT_DIR$" web="/" />
