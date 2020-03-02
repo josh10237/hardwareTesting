@@ -6,13 +6,13 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 import spidev
 import os
+from time import sleep
 from threading import Thread
 from time import sleep
 import RPi.GPIO as GPIO
 from pidev.stepper import stepper
 from Slush.Devices import L6470Registers
 from pidev.Cyprus_Commands import Cyprus_Commands_RPi as cyprus
-
 spi = spidev.SpiDev()
 from pidev.MixPanel import MixPanel
 import datetime
@@ -128,7 +128,7 @@ class SwitchScreen(Screen):
 
     def righty(self):
         SCREEN_MANAGER.transition.direction = 'left'
-        SCREEN_MANAGER.current = 'switchMethods'
+        SCREEN_MANAGER.current = 'switchMethods1'
 
 
 class DriverScreen(Screen):
@@ -175,19 +175,40 @@ class SwitchMethodsScreen(Screen):
 
     def switchThread(self):
         global checking
-        print("thread method")
         while checking:
             if (cyprus.read_gpio() & 0b0001):
                 sleep(.1)
                 if (cyprus.read_gpio() & 0b0001):
-                    print('sensing')
-                    self.ids.toggle_sensing_label.text = "Sensing"
-                    self.ids.toggle_sensing_label.color = (0, 1, 0, .8)
+                    self.ids.toggle_sensing_label.text = "Not Sensing"
+                    self.ids.toggle_sensing_label.color = (1, 0, 0, .8)
             else:
-                print("not sensing")
-                self.ids.toggle_sensing_label.text = "Not Sensing"
-                self.ids.toggle_sensing_label.color = (1, 0, 0, .8)
+                self.ids.toggle_sensing_label.text = "Sensing"
+                self.ids.toggle_sensing_label.color = (0, 1, 0, .8)
 
+class SwitchMethods1Screen(Screen):
+    def back(self):
+        global checking
+        checking = False
+        SCREEN_MANAGER.transition.direction = 'right'
+        SCREEN_MANAGER.current = 'switches'
+
+    def startThread(self):
+        global checking
+        checking = True
+        Thread(target=self.switchThread).start()
+        Thread.daemon = True
+
+    def switchThread(self):
+        global checking
+        while checking:
+            if (cyprus.read_gpio() & 0b0001):
+                sleep(.1)
+                if (cyprus.read_gpio() & 0b0001):
+                    self.ids.toggle_sensing_label.text = "Not Sensing"
+                    self.ids.toggle_sensing_label.color = (1, 0, 0, .8)
+            else:
+                self.ids.toggle_sensing_label.text = "Sensing"
+                self.ids.toggle_sensing_label.color = (0, 1, 0, .8)
 
 class ServoMethodsScreen(Screen):
     def back(self):
@@ -200,6 +221,7 @@ Builder.load_file('switches.kv')
 Builder.load_file('drivers.kv')
 Builder.load_file('motors.kv')
 Builder.load_file('switchMethods.kv')
+Builder.load_file('switchMethods1.kv')
 Builder.load_file('servoMethods.kv')
 # Builder.load_file('stepperMethods.kv')
 # Builder.load_file('talonMethods.kv')
@@ -209,6 +231,7 @@ SCREEN_MANAGER.add_widget(SwitchScreen(name="switches"))
 SCREEN_MANAGER.add_widget(DriverScreen(name="drivers"))
 SCREEN_MANAGER.add_widget(MotorScreen(name="motors"))
 SCREEN_MANAGER.add_widget(SwitchMethodsScreen(name="switchMethods"))
+SCREEN_MANAGER.add_widget(SwitchMethods1Screen(name="switchMethods1"))
 SCREEN_MANAGER.add_widget(ServoMethodsScreen(name="servoMethods"))
 
 
