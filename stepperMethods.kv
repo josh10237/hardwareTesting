@@ -1,0 +1,72 @@
+<StepperMethodsScreen>:
+    name: 'stepperMethods'
+    FloatLayout:
+        size_hint: None, None
+
+    Label:
+        text: "Stepper Testing"
+        size: 100, 100
+        font_size: 100
+        pos_hint:{"y":.4,"x": 0}
+        color: 0, 0, 0, .8
+        bold: True
+
+    ImageButton:
+        id: back
+        source: "backarrow.png"
+        size: 100, 100
+        x: 10
+        y: root.height * 0.9
+        on_press: root.back()
+
+    Label:
+        text: "Plug into port 0"
+        size: 100, 100
+        font_size: 50
+        pos_hint:{"y":.3,"x": 0}
+        color: 0, 0, 0, .5
+
+    Label:
+        text: "Blue, Red, Green, Black"
+        size: 100, 100
+        font_size: 50
+        pos_hint:{"y":-.1,"x": 0}
+        color: 0, 0, 0, .5
+
+    ImageButton:
+        source: "steppermotor.jpg"
+        size: 300, 300
+        x: (root.width * 0.5) - 150
+        y: root.height * 0.48
+
+    DPEAButton:
+        text: "Test slow"
+        size: 500, 100
+        x: (root.width * 0.3) - 250
+        y: root.height * 0.05
+        color: 1, 0, 0, 1
+        on_press: root.setSpeed("slow")
+
+    DPEAButton:
+        text: "Test Fast"
+        size: 500, 100
+        x: (root.width * 0.3) - 250
+        y: root.height * 0.25
+        color: 0, 1, 0, 1
+        on_press: root.setSpeed("fast")
+
+    DPEAButton:
+        text: "Move forward"
+        size: 500, 100
+        x: (root.width * 0.7) - 250
+        y: root.height * 0.25
+        color: 1, 0, .5, 1
+        on_press: root.one("for")
+
+    DPEAButton:
+        text: "Move back"
+        size: 500, 100
+        x: (root.width * 0.7) - 250
+        y: root.height * 0.05
+        color: .5, .5, 1, 1
+        on_press: root.one("back")

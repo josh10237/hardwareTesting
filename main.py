@@ -46,30 +46,10 @@ Window.clearcolor = (1, 1, 1, 1)  # White
 
 
 class MainScreen(Screen):
-    """
-    Class to handle the main screen and its associated touch events
-    """
-    global pos
-    global cytron
-    global servo
-    global talon
-    global checking
-    pos = False
-    servo = False
-    talon = False
-    cytron = False
-    global togServo
-    togServo = 1
 
-    def servoThread(self):
-        global servo
-        while servo:
-            if (cyprus.read_gpio() & 0b0001):
-                sleep(.1)
-                if (cyprus.read_gpio() & 0b0001):
-                    cyprus.set_servo_position(1, 0)
-            else:
-                cyprus.set_servo_position(1, 1)
+    global servoPos
+    servoPos = 1
+
 
     def talonThread(self):
         global talon
@@ -151,7 +131,8 @@ class MotorScreen(Screen):
         SCREEN_MANAGER.current = MAIN_SCREEN_NAME
 
     def lefty(self):
-        # SCREEN_MANAGER.current = ''
+        SCREEN_MANAGER.transition.direction = 'left'
+        SCREEN_MANAGER.current = "stepperMethods"
         pass
 
     def righty(self):
@@ -189,6 +170,8 @@ class SwitchMethods1Screen(Screen):
     def back(self):
         global checking
         checking = False
+        GPIO.cleanup()
+
         SCREEN_MANAGER.transition.direction = 'right'
         SCREEN_MANAGER.current = 'switches'
 
@@ -214,6 +197,43 @@ class ServoMethodsScreen(Screen):
     def back(self):
         SCREEN_MANAGER.transition.direction = 'right'
         SCREEN_MANAGER.current = "motors"
+        cyprus.set_servo_position(1, .5)
+        cyprus.close()
+        spi.close()
+        GPIO.cleanup()
+
+    def moveServo(self):
+        global servoPos
+        cyprus.setup_servo(1)
+        if servoPos == 1:
+            cyprus.set_servo_position(1, 0)
+            servoPos = 0
+        else:
+            cyprus.set_servo_position(1, 1)
+            servoPos = 1
+
+
+class StepperMethodsScreen(Screen):
+
+    def setSpeed(self, speed):
+        if speed == "Fast":
+            s1 = stepper(port=0, micro_steps=32, hold_current=20, run_current=20, accel_current=20, deaccel_current=20,
+                         steps_per_unit=200, speed=8)
+            s1.start_relative_move(5)
+        else:
+            s0 = stepper(port=0, micro_steps=32, hold_current=20, run_current=20, accel_current=20, deaccel_current=20,
+                         steps_per_unit=200, speed=2)
+            s0.start_relative_move(5)
+
+
+
+    def one(self, dir):
+        s1 = stepper(port=0, micro_steps=32, hold_current=20, run_current=20, accel_current=20, deaccel_current=20,
+                     steps_per_unit=200, speed=8)
+        if dir == "for":
+            s1.start_relative_move(1)
+        else:
+            s1.start_relative_move(-1)
 
 
 Builder.load_file('main.kv')
@@ -223,7 +243,7 @@ Builder.load_file('motors.kv')
 Builder.load_file('switchMethods.kv')
 Builder.load_file('switchMethods1.kv')
 Builder.load_file('servoMethods.kv')
-# Builder.load_file('stepperMethods.kv')
+Builder.load_file('stepperMethods.kv')
 # Builder.load_file('talonMethods.kv')
 # Builder.load_file('cytronMethods.kv')
 SCREEN_MANAGER.add_widget(MainScreen(name=MAIN_SCREEN_NAME))
@@ -233,9 +253,8 @@ SCREEN_MANAGER.add_widget(MotorScreen(name="motors"))
 SCREEN_MANAGER.add_widget(SwitchMethodsScreen(name="switchMethods"))
 SCREEN_MANAGER.add_widget(SwitchMethods1Screen(name="switchMethods1"))
 SCREEN_MANAGER.add_widget(ServoMethodsScreen(name="servoMethods"))
+SCREEN_MANAGER.add_widget(StepperMethodsScreen(name="stepperMethods"))
 
-
-# SCREEN_MANAGER.add_widget(StepperMethodsScreen(name="stepperMethods"))
 # SCREEN_MANAGER.add_widget(TalonMethodsScreen(name="talonMethods"))
 # SCREEN_MANAGER.add_widget(CytronMethodsScreen(name="cytronMethods"))
 

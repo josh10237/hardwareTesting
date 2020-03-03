@@ -7,7 +7,7 @@
         text: "Servo Testing"
         size: 100, 100
         font_size: 100
-        pos_hint:{"y":.3,"x": 0}
+        pos_hint:{"y":.35,"x": 0}
         color: 0, 0, 0, .8
         bold: True
 
@@ -20,17 +20,26 @@
         on_press: root.back()
 
     Label:
-        text: "Plug into port P6"
+        text: "Plug into port P4"
         size: 100, 100
         font_size: 50
-        pos_hint:{"y":.2,"x": 0}
+        pos_hint:{"y":.25,"x": 0}
         color: 0, 0, 0, .5
 
     ImageButton:
         source: "servomotor.png"
         size: 300, 300
         x: (root.width * 0.5) - 150
-        y: root.height * 0.3
+        y: root.height * 0.4
+
+
+    Label:
+        text: "Black on outside"
+        size: 100, 100
+        font_size: 50
+        pos_hint:{"y":-.16,"x": 0}
+        color: 0, 0, 0, .5
+
 
     DPEAButton:
         text: "Move Servo"
