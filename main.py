@@ -170,7 +170,6 @@ class SwitchMethods1Screen(Screen):
     def back(self):
         global checking
         checking = False
-        GPIO.cleanup()
 
         SCREEN_MANAGER.transition.direction = 'right'
         SCREEN_MANAGER.current = 'switches'
@@ -198,10 +197,7 @@ class ServoMethodsScreen(Screen):
         SCREEN_MANAGER.transition.direction = 'right'
         SCREEN_MANAGER.current = "motors"
         cyprus.set_servo_position(1, .5)
-        cyprus.close()
-        spi.close()
-        GPIO.cleanup()
-
+        cyprus.initialize()
     def moveServo(self):
         global servoPos
         cyprus.setup_servo(1)
@@ -216,14 +212,21 @@ class ServoMethodsScreen(Screen):
 class StepperMethodsScreen(Screen):
 
     def setSpeed(self, speed):
-        if speed == "Fast":
-            s1 = stepper(port=0, micro_steps=32, hold_current=20, run_current=20, accel_current=20, deaccel_current=20,
-                         steps_per_unit=200, speed=8)
+        s1 = stepper(port=0, micro_steps=32, hold_current=20, run_current=20, accel_current=20, deaccel_current=20,
+                     steps_per_unit=200, speed=8)
+        if speed == "fast":
+            s1.set_speed(8)
             s1.start_relative_move(5)
         else:
-            s0 = stepper(port=0, micro_steps=32, hold_current=20, run_current=20, accel_current=20, deaccel_current=20,
-                         steps_per_unit=200, speed=2)
-            s0.start_relative_move(5)
+            s1.set_speed(2)
+            s1.start_relative_move(5)
+
+    def back(self):
+        s1 = stepper(port=0, micro_steps=32, hold_current=20, run_current=20, accel_current=20, deaccel_current=20,
+                     steps_per_unit=200, speed=8)
+        SCREEN_MANAGER.transition.direction = 'right'
+        SCREEN_MANAGER.current = "motors"
+        s1.free()
 
 
 
