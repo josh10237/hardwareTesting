@@ -1,5 +1,11 @@
-import os
+##############################
+#                            #
+#        Josh Benson         #
+#           2020             #
+#                            #
+##############################
 
+import os
 from kivy.app import App
 from kivy.core.window import Window
 from kivy.lang import Builder
@@ -239,6 +245,10 @@ class StepperMethodsScreen(Screen):
             s1.start_relative_move(-1)
 
 
+class TalonMethodsScreen(Screen):
+    pass
+
+
 Builder.load_file('main.kv')
 Builder.load_file('switches.kv')
 Builder.load_file('drivers.kv')
@@ -247,7 +257,7 @@ Builder.load_file('switchMethods.kv')
 Builder.load_file('switchMethods1.kv')
 Builder.load_file('servoMethods.kv')
 Builder.load_file('stepperMethods.kv')
-# Builder.load_file('talonMethods.kv')
+#Builder.load_file('talonMethods.kv')
 # Builder.load_file('cytronMethods.kv')
 SCREEN_MANAGER.add_widget(MainScreen(name=MAIN_SCREEN_NAME))
 SCREEN_MANAGER.add_widget(SwitchScreen(name="switches"))
@@ -257,8 +267,7 @@ SCREEN_MANAGER.add_widget(SwitchMethodsScreen(name="switchMethods"))
 SCREEN_MANAGER.add_widget(SwitchMethods1Screen(name="switchMethods1"))
 SCREEN_MANAGER.add_widget(ServoMethodsScreen(name="servoMethods"))
 SCREEN_MANAGER.add_widget(StepperMethodsScreen(name="stepperMethods"))
-
-# SCREEN_MANAGER.add_widget(TalonMethodsScreen(name="talonMethods"))
+#SCREEN_MANAGER.add_widget(TalonMethodsScreen(name="talonMethods"))
 # SCREEN_MANAGER.add_widget(CytronMethodsScreen(name="cytronMethods"))
 
 
