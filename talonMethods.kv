@@ -1,0 +1,92 @@
+##############################
+#                            #
+#        Josh Benson         #
+#           2020             #
+#                            #
+##############################
+
+<TalonMethodsScreen>:
+    name: 'talonMethods'
+    FloatLayout:
+        size_hint: None, None
+
+    Label:
+        text: "Talon Testing"
+        size: 100, 100
+        font_size: 100
+        pos_hint:{"y":.35,"x": 0}
+        color: 0, 0, 0, .8
+        bold: True
+
+    ImageButton:
+        id: back
+        source: "backarrow.png"
+        size: 100, 100
+        x: 10
+        y: root.height * 0.9
+        on_press: root.back()
+
+    Label:
+        text: "Plug into port P5 and connect power"
+        size: 100, 100
+        font_size: 50
+        pos_hint:{"y":.25,"x": 0}
+        color: 0, 0, 0, .5
+
+    ImageButton:
+        source: "TALON.jpg"
+        size: 300, 300
+        x: (root.width * 0.5) - 150
+        y: root.height * 0.4
+
+
+    Label:
+        text: "Adjust PWM with slider"
+        size: 100, 100
+        font_size: 50
+        pos_hint:{"y":-.16,"x": 0}
+        color: 0, 0, 0, .5
+
+    Slider:
+        id: PWM_slider
+        size_hint_x: .5
+        size_hint_y: .25
+        x: root.width * 0.25
+        y: root.height * .08
+        min: 0
+        max: 100
+        value: 50
+        step: 1
+        on_touch_move: root.updateLabel()
+
+    Label:
+        id: talon_label
+        text: "Neutral"
+        size: 100, 100
+        font_size: 50
+        pos_hint:{"y":-.4,"x": 0}
+        color: 1, .65, 0, .8
+
+    DPEAButton:
+        text: "Full Forward"
+        size: 300, 65
+        x: (root.width * 0.15)- 150
+        y: root.height * 0.6
+        color: 0, .8, 0, .6
+        on_press: root.buttonControl("forward")
+
+    DPEAButton:
+        text: "Neutral"
+        size: 300, 65
+        x: (root.width * 0.15) - 150
+        y: root.height * 0.5
+        color: 1, .65, 0, .6
+        on_press: root.buttonControl("nut")
+
+    DPEAButton:
+        text: "Full Back"
+        size: 300, 65
+        x: (root.width * 0.15) - 150
+        y: root.height * 0.4
+        color: .8, 0, 0, .6
+        on_press: root.buttonControl("back")

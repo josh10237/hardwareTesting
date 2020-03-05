@@ -19,6 +19,7 @@ import RPi.GPIO as GPIO
 from pidev.stepper import stepper
 from Slush.Devices import L6470Registers
 from pidev.Cyprus_Commands import Cyprus_Commands_RPi as cyprus
+
 spi = spidev.SpiDev()
 from pidev.MixPanel import MixPanel
 import datetime
@@ -52,10 +53,8 @@ Window.clearcolor = (1, 1, 1, 1)  # White
 
 
 class MainScreen(Screen):
-
     global servoPos
     servoPos = 1
-
 
     def talonThread(self):
         global talon
@@ -82,6 +81,13 @@ class MainScreen(Screen):
                                       compare_mode=cyprus.LESS_THAN_OR_EQUAL)
                 sleep(.1)
                 print("yeepie 1")
+
+    def cyp(self):
+        # cyprus.close()
+        # cyprus.initialize()
+        # cyprus.setup_servo(2)
+        # cyprus.set_servo_position(2, .5)
+        print("on enter")
 
     def motorpressed(self):
         SCREEN_MANAGER.transition.direction = 'left'
@@ -123,12 +129,12 @@ class DriverScreen(Screen):
         SCREEN_MANAGER.current = MAIN_SCREEN_NAME
 
     def lefty(self):
-        # SCREEN_MANAGER.current =
-        pass
+        SCREEN_MANAGER.transition.direction = 'left'
+        SCREEN_MANAGER.current = "cytronMethods"
 
     def righty(self):
-        # SCREEN_MANAGER.current =
-        pass
+        SCREEN_MANAGER.transition.direction = 'left'
+        SCREEN_MANAGER.current = "talonMethods"
 
 
 class MotorScreen(Screen):
@@ -172,6 +178,7 @@ class SwitchMethodsScreen(Screen):
                 self.ids.toggle_sensing_label.text = "Sensing"
                 self.ids.toggle_sensing_label.color = (0, 1, 0, .8)
 
+
 class SwitchMethods1Screen(Screen):
     def back(self):
         global checking
@@ -198,12 +205,14 @@ class SwitchMethods1Screen(Screen):
                 self.ids.toggle_sensing_label.text = "Sensing"
                 self.ids.toggle_sensing_label.color = (0, 1, 0, .8)
 
+
 class ServoMethodsScreen(Screen):
     def back(self):
         SCREEN_MANAGER.transition.direction = 'right'
         SCREEN_MANAGER.current = "motors"
         cyprus.set_servo_position(1, .5)
         cyprus.initialize()
+
     def moveServo(self):
         global servoPos
         cyprus.setup_servo(1)
@@ -234,8 +243,6 @@ class StepperMethodsScreen(Screen):
         SCREEN_MANAGER.current = "motors"
         s1.free()
 
-
-
     def one(self, dir):
         s1 = stepper(port=0, micro_steps=32, hold_current=20, run_current=20, accel_current=20, deaccel_current=20,
                      steps_per_unit=200, speed=8)
@@ -246,7 +253,76 @@ class StepperMethodsScreen(Screen):
 
 
 class TalonMethodsScreen(Screen):
-    pass
+    def back(self):
+        SCREEN_MANAGER.transition.direction = 'right'
+        SCREEN_MANAGER.current = 'drivers'
+        cyprus.set_servo_position(1, 0.5)
+
+    def updateLabel(self):
+        cyprus.initialize()
+        cyprus.setup_servo(2)
+        spd = self.ids.PWM_slider.value / 100
+        if (self.ids.PWM_slider.value > 45) and (self.ids.PWM_slider.value < 55):
+            self.ids.talon_label.text = "Neutral"
+            self.ids.talon_label.color = (1, .65, 0, .8)
+            spd = .5
+        elif self.ids.PWM_slider.value > 54:
+            s = "Forward " + str(abs(self.ids.PWM_slider.value) - 50)
+            self.ids.talon_label.text = s
+            self.ids.talon_label.color = (0, 1, 0, .8)
+            spd = spd - .03
+        else:
+            s = "Backward " + str(abs(self.ids.PWM_slider.value) - 50)
+            self.ids.talon_label.text = s
+            self.ids.talon_label.color = (1, 0, 0, .8)
+            spd = spd + .03
+
+        cyprus.set_servo_position(2, spd)
+
+    def buttonControl(self, cmd):
+        if cmd == "forward":
+            self.ids.talon_label.text = "Forward 50.0"
+            self.ids.talon_label.color = (0, 1, 0, .8)
+            cyprus.set_servo_position(2, 1)
+
+        elif cmd == "back":
+            self.ids.talon_label.text = "Backward 50.0"
+            self.ids.talon_label.color = (1, 0, 0, .8)
+            cyprus.set_servo_position(2, 0)
+
+        else:
+            self.ids.talon_label.text = "Neutral"
+            self.ids.talon_label.color = (1, .65, 0, .8)
+            cyprus.set_servo_position(2, .5)
+
+    def tickArrows(self, way):
+        pass
+
+class CytronMethodsScreen(Screen):
+    def back(self):
+        SCREEN_MANAGER.transition.direction = 'right'
+        SCREEN_MANAGER.current = 'drivers'
+
+    def updateLabel(self):
+        cyprus.initialize()
+        if (self.ids.PWM_slider.value < 55) and (self.ids.PWM_slider.value > 45):
+            self.ids.talon_label.text = "Neutral"
+            self.ids.talon_label.color = (1, .65, 0, .8)
+            val = 0
+        elif self.ids.PWM_slider.value > 54:
+            s = "Forward " + str(abs(self.ids.PWM_slider.value) - 50)
+            self.ids.talon_label.text = s
+            self.ids.talon_label.color = (0, 1, 0, .8)
+            val = (self.ids.PWM_slider.value - 50) * 2000
+            direction = 1
+        else:
+            s = "Backward " + str(abs(self.ids.PWM_slider.value) - 50)
+            self.ids.talon_label.text = s
+            self.ids.talon_label.color = (1, 0, 0, .8)
+            val = (50 - (self.ids.PWM_slider.value)) * 2000
+            direction = 0
+        cyprus.set_pwm_values(2, period_value=100000, compare_value=val,
+                              compare_mode=cyprus.LESS_THAN_OR_EQUAL)
 
 
 Builder.load_file('main.kv')
@@ -257,8 +333,8 @@ Builder.load_file('switchMethods.kv')
 Builder.load_file('switchMethods1.kv')
 Builder.load_file('servoMethods.kv')
 Builder.load_file('stepperMethods.kv')
-#Builder.load_file('talonMethods.kv')
-# Builder.load_file('cytronMethods.kv')
+Builder.load_file('talonMethods.kv')
+Builder.load_file('cytronMethods.kv')
 SCREEN_MANAGER.add_widget(MainScreen(name=MAIN_SCREEN_NAME))
 SCREEN_MANAGER.add_widget(SwitchScreen(name="switches"))
 SCREEN_MANAGER.add_widget(DriverScreen(name="drivers"))
@@ -267,8 +343,10 @@ SCREEN_MANAGER.add_widget(SwitchMethodsScreen(name="switchMethods"))
 SCREEN_MANAGER.add_widget(SwitchMethods1Screen(name="switchMethods1"))
 SCREEN_MANAGER.add_widget(ServoMethodsScreen(name="servoMethods"))
 SCREEN_MANAGER.add_widget(StepperMethodsScreen(name="stepperMethods"))
-#SCREEN_MANAGER.add_widget(TalonMethodsScreen(name="talonMethods"))
-# SCREEN_MANAGER.add_widget(CytronMethodsScreen(name="cytronMethods"))
+SCREEN_MANAGER.add_widget(TalonMethodsScreen(name="talonMethods"))
+
+
+SCREEN_MANAGER.add_widget(CytronMethodsScreen(name="cytronMethods"))
 
 
 def send_event(event_name):
