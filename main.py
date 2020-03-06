@@ -267,12 +267,12 @@ class TalonMethodsScreen(Screen):
             self.ids.talon_label.color = (1, .65, 0, .8)
             spd = .5
         elif self.ids.PWM_slider.value > 54:
-            s = "Forward " + str(abs(self.ids.PWM_slider.value) - 50)
+            s = "Forward " + str(self.ids.PWM_slider.value - 50)
             self.ids.talon_label.text = s
             self.ids.talon_label.color = (0, 1, 0, .8)
             spd = spd - .03
         else:
-            s = "Backward " + str(abs(self.ids.PWM_slider.value) - 50)
+            s = "Backward " + str(self.ids.PWM_slider.value - 50)
             self.ids.talon_label.text = s
             self.ids.talon_label.color = (1, 0, 0, .8)
             spd = spd + .03
@@ -282,21 +282,64 @@ class TalonMethodsScreen(Screen):
     def buttonControl(self, cmd):
         if cmd == "forward":
             self.ids.talon_label.text = "Forward 50.0"
+            self.ids.PWM_slider.value = 100
             self.ids.talon_label.color = (0, 1, 0, .8)
             cyprus.set_servo_position(2, 1)
 
         elif cmd == "back":
             self.ids.talon_label.text = "Backward 50.0"
+            self.ids.PWM_slider.value = 0
             self.ids.talon_label.color = (1, 0, 0, .8)
             cyprus.set_servo_position(2, 0)
 
         else:
             self.ids.talon_label.text = "Neutral"
+            self.ids.PWM_slider.value = 50
             self.ids.talon_label.color = (1, .65, 0, .8)
             cyprus.set_servo_position(2, .5)
 
     def tickArrows(self, way):
-        pass
+        cyprus.initialize()
+        cyprus.setup_servo(2)
+        num = self.ids.PWM_slider.value
+        print("First: " + str(num))
+        if way == "up":
+            if self.ids.talon_label.text == "Neutral":
+                num = 55
+            elif num == 45:
+                num = 50
+            else:
+                num += 1
+                print("Plus: " + str(num))
+        elif way == "down":
+            if self.ids.talon_label.text == "Neutral":
+                num = 45
+            elif num == 55:
+                num = 50
+            else:
+                num -= 1
+                print("Minus: " + str(num))
+        spd = num / 100
+        if (num > 45) and (num < 55):
+            self.ids.talon_label.text = "Neutral"
+            self.ids.talon_label.color = (1, .65, 0, .8)
+            self.ids.PWM_slider.value = 50
+            spd = .5
+        elif num > 54:
+            s = "Forward " + str(num - 50)
+            self.ids.talon_label.text = s
+            self.ids.talon_label.color = (0, 1, 0, .8)
+            self.ids.PWM_slider.value = num
+            spd = spd - .03
+        else:
+            s = "Backward " + str(num - 50)
+            self.ids.talon_label.text = s
+            self.ids.talon_label.color = (1, 0, 0, .8)
+            self.ids.PWM_slider.value = num
+            spd = spd + .03
+
+        cyprus.set_servo_position(2, spd)
+
 
 class CytronMethodsScreen(Screen):
     def back(self):
@@ -306,23 +349,88 @@ class CytronMethodsScreen(Screen):
     def updateLabel(self):
         cyprus.initialize()
         if (self.ids.PWM_slider.value < 55) and (self.ids.PWM_slider.value > 45):
-            self.ids.talon_label.text = "Neutral"
-            self.ids.talon_label.color = (1, .65, 0, .8)
+            self.ids.cytron_label.text = "Neutral"
+            self.ids.cytron_label.color = (1, .65, 0, .8)
             val = 0
         elif self.ids.PWM_slider.value > 54:
             s = "Forward " + str(abs(self.ids.PWM_slider.value) - 50)
-            self.ids.talon_label.text = s
-            self.ids.talon_label.color = (0, 1, 0, .8)
+            self.ids.cytron_label.text = s
+            self.ids.cytron_label.color = (0, 1, 0, .8)
             val = (self.ids.PWM_slider.value - 50) * 2000
             direction = 1
         else:
             s = "Backward " + str(abs(self.ids.PWM_slider.value) - 50)
-            self.ids.talon_label.text = s
-            self.ids.talon_label.color = (1, 0, 0, .8)
-            val = (50 - (self.ids.PWM_slider.value)) * 2000
+            self.ids.cytron_label.text = s
+            self.ids.cytron_label.color = (1, 0, 0, .8)
+            val = (50 - self.ids.PWM_slider.value) * 2000
             direction = 0
         cyprus.set_pwm_values(2, period_value=100000, compare_value=val,
                               compare_mode=cyprus.LESS_THAN_OR_EQUAL)
+
+    def buttonControl(self, cmd):
+        if cmd == "forward":
+            self.ids.cytron_label.text = "Forward 50.0"
+            self.ids.PWM_slider.value = 100
+            self.ids.cytron_label.color = (0, 1, 0, .8)
+            cyprus.set_pwm_values(2, period_value=100000, compare_value=100000,
+                                  compare_mode=cyprus.LESS_THAN_OR_EQUAL)
+
+        elif cmd == "back":
+            self.ids.cytron_label.text = "Backward 50.0"
+            self.ids.PWM_slider.value = 0
+            self.ids.cytron_label.color = (1, 0, 0, .8)
+            cyprus.set_pwm_values(2, period_value=100000, compare_value=100000,
+                                  compare_mode=cyprus.LESS_THAN_OR_EQUAL)
+
+        else:
+            self.ids.cytron_label.text = "Neutral"
+            self.ids.PWM_slider.value = 50
+            self.ids.cytron_label.color = (1, .65, 0, .8)
+            cyprus.set_pwm_values(2, period_value=100000, compare_value=0,
+                                  compare_mode=cyprus.LESS_THAN_OR_EQUAL)
+
+    def tickArrows(self, way):
+        cyprus.initialize()
+        cyprus.setup_servo(2)
+        num = self.ids.PWM_slider.value
+        print("First: " + str(num))
+        if way == "up":
+            if self.ids.cytron_label.text == "Neutral":
+                num = 55
+            elif num == 45:
+                num = 50
+            else:
+                num += 1
+                print("Plus: " + str(num))
+        elif way == "down":
+            if self.ids.cytron_label.text == "Neutral":
+                num = 45
+            elif num == 55:
+                num = 50
+            else:
+                num -= 1
+                print("Minus: " + str(num))
+        if (num > 45) and (num < 55):
+            self.ids.cytron_label.text = "Neutral"
+            self.ids.cytron_label.color = (1, .65, 0, .8)
+            self.ids.PWM_slider.value = 50
+            val = 0
+        elif num > 54:
+            s = "Forward " + str(num - 50)
+            self.ids.cytron_label.text = s
+            self.ids.cytron_label.color = (0, 1, 0, .8)
+            self.ids.PWM_slider.value = num
+            val = (self.ids.PWM_slider.value - 50) * 2000
+        else:
+            s = "Backward " + str(num - 50)
+            self.ids.cytron_label.text = s
+            self.ids.cytron_label.color = (1, 0, 0, .8)
+            self.ids.PWM_slider.value = num
+            num = num + 3
+        val = (self.ids.PWM_slider.value - 50) * 2000
+        cyprus.set_pwm_values(2, period_value=100000, compare_value=val,
+                              compare_mode=cyprus.LESS_THAN_OR_EQUAL)
+
 
 
 Builder.load_file('main.kv')
@@ -344,7 +452,6 @@ SCREEN_MANAGER.add_widget(SwitchMethods1Screen(name="switchMethods1"))
 SCREEN_MANAGER.add_widget(ServoMethodsScreen(name="servoMethods"))
 SCREEN_MANAGER.add_widget(StepperMethodsScreen(name="stepperMethods"))
 SCREEN_MANAGER.add_widget(TalonMethodsScreen(name="talonMethods"))
-
 
 SCREEN_MANAGER.add_widget(CytronMethodsScreen(name="cytronMethods"))
 

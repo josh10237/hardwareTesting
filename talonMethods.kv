@@ -90,3 +90,17 @@
         y: root.height * 0.4
         color: .8, 0, 0, .6
         on_press: root.buttonControl("back")
+
+    ImageButton:
+        size: 150, 150
+        source: "uparrow.png"
+        x: (root.width * 0.8) - 75
+        y: root.height * 0.55
+        on_press: root.tickArrows("up")
+
+    ImageButton:
+        size: 150, 150
+        source: "downarrow.png"
+        x: (root.width * 0.8) - 75
+        y: root.height * 0.4
+        on_press: root.tickArrows("down")
