@@ -80,33 +80,46 @@
 
     DPEAButton:
         text: "Port 0"
-        size: 300, 65
-        x: (root.width * 0.15)- 150
-        y: root.height * 0.6
+        size: 250, 65
+        x: (root.width * 0.1)- 125
+        y: root.height * 0.72
         color: .6, .6, .6, .6
         on_press: root.port(6)
 
     DPEAButton:
         text: "Port 1"
-        size: 300, 65
-        x: (root.width * 0.15) - 150
-        y: root.height * 0.5
+        size: 250, 65
+        x: (root.width * 0.28) - 125
+        y: root.height * 0.72
         color: .6, .6, .6, .6
         on_press: root.port(7)
 
     DPEAButton:
         text: "Port 2"
-        size: 300, 65
-        x: (root.width * 0.15) - 150
-        y: root.height * 0.4
+        size: 250, 65
+        x: (root.width * 0.1) - 125
+        y: root.height * 0.62
         color: .6, .6, .6, .6
         on_press: root.port(8)
 
     DPEAButton:
         text: "Port 3"
-        size: 300, 65
-        x: (root.width * 0.15) - 150
-        y: root.height * 0.4
+        size: 250, 65
+        x: (root.width * 0.28) - 125
+        y: root.height * 0.62
         color: .6, .6, .6, .6
         on_press: root.port(8)
 
+    Label:
+        text: "Toggle Direction"
+        size: 100, 100
+        font_size: 30
+        pos_hint:{"y": .05,"x": -.3}
+        color: 0, 0, 0, .5
+
+    Label:
+        text: "Set port"
+        size: 100, 100
+        font_size: 30
+        pos_hint:{"y": .33,"x": -.3}
+        color: 0, 0, 0, .5
