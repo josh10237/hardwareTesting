@@ -47,14 +47,30 @@
         pos_hint:{"y":-.16,"x": 0}
         color: 0, 0, 0, .5
 
+    Label:
+        text: "50%"
+        id: percent_label
+        size: 100, 100
+        font_size: 50
+        pos_hint:{"y":-.3,"x": 0}
+        color: 0, 0, 0, .5
+
 
     DPEAButton:
-        text: "Move Servo"
+        text: "Toggle Servo"
         size: 400, 150
-        x: (root.width * 0.5) - 200
-        y: root.height * 0.1
+        x: (root.width * 0.2) - 200
+        y: root.height * 0.5
         color: 1, 0, 1, 1
-        on_press: root.moveServo()
+        on_release: root.updateLabel("move")
+
+    DPEAButton:
+        text: "Reset Servo"
+        size: 400, 150
+        x: (root.width * 0.8) - 200
+        y: root.height * 0.5
+        color: 0, 1, 0, 1
+        on_release: root.updateLabel("reset")
 
 
     Slider:
@@ -62,9 +78,9 @@
         size_hint_x: .5
         size_hint_y: .25
         x: root.width * 0.25
-        y: root.height * .08
+        y: 0
         min: 0
         max: 100
         value: 50
         step: 1
-        on_touch_move: root.updateLabel()
+        on_touch_up: root.updateLabel("none")

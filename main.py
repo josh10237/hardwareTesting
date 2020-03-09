@@ -241,15 +241,43 @@ class ServoMethodsScreen(Screen):
         cyprus.set_servo_position(1, .5)
         cyprus.initialize()
 
-    def moveServo(self):
+    def moveServo(self, param):
         global servoPos
-        cyprus.setup_servo(1)
-        if servoPos == 1:
-            cyprus.set_servo_position(1, 0)
-            servoPos = 0
+        if param == "move":
+            cyprus.setup_servo(1)
+            if servoPos == 1:
+                cyprus.set_servo_position(1, 0)
+                servoPos = 0
+            else:
+                cyprus.set_servo_position(1, 1)
+                servoPos = 1
         else:
-            cyprus.set_servo_position(1, 1)
+            cyprus.set_servo_position(1, .5)
+            servoPos = 0
+
+    def updateLabel(self, param):
+        global servoPos
+        if param == "move":
+            if servoPos == 1:
+                cyprus.set_servo_position(1, 0)
+                self.ids.servo_slider.value = 0
+                servoPos = 0
+            else:
+                cyprus.set_servo_position(1, 1)
+                servoPos = 1
+                self.ids.servo_slider.value = 100
+        elif param == "reset":
+            cyprus.set_servo_position(1, .5)
+            servoPos = 0
+            self.ids.servo_slider.value = 50
+        val = self.ids.servo_slider.value
+        self.ids.percent_label.text = str(val) + "%"
+        cyprus.set_servo_position(1, val/100)
+        if val > 50:
             servoPos = 1
+        else:
+            servoPos = 0
+
 
 
 class StepperMethodsScreen(Screen):
