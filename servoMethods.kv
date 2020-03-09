@@ -55,3 +55,16 @@
         y: root.height * 0.1
         color: 1, 0, 1, 1
         on_press: root.moveServo()
+
+
+    Slider:
+        id: servo_slider
+        size_hint_x: .5
+        size_hint_y: .25
+        x: root.width * 0.25
+        y: root.height * .08
+        min: 0
+        max: 100
+        value: 50
+        step: 1
+        on_touch_move: root.updateLabel()

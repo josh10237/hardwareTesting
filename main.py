@@ -34,7 +34,7 @@ MIXPANEL = MixPanel("Project Name", MIXPANEL_TOKEN)
 SCREEN_MANAGER = ScreenManager()
 MAIN_SCREEN_NAME = 'main'
 cyprus.initialize()
-
+global switchPort
 
 class ProjectNameGUI(App):
     """
@@ -162,50 +162,78 @@ class SwitchMethodsScreen(Screen):
     def startThread(self):
         print("recived on enter")
         global checking
+        global switchPort
+        switchPort = 6
         checking = True
         Thread(target=self.switchThread).start()
         Thread.daemon = True
 
     def switchThread(self):
+        global switchPort
         global checking
         while checking:
-            if (cyprus.read_gpio() & 0b0001):
+            if switchPort == 6:
+                val = 0b0001
+            elif switchPort == 7:
+                val = 0b0010
+            elif switchPort == 8:
+                val = 0b0100
+            print (val)
+            if (cyprus.read_gpio() & val):
                 sleep(.1)
-                if (cyprus.read_gpio() & 0b0001):
+                if (cyprus.read_gpio() & val):
                     self.ids.toggle_sensing_label.text = "Not Sensing"
                     self.ids.toggle_sensing_label.color = (1, 0, 0, .8)
             else:
                 self.ids.toggle_sensing_label.text = "Sensing"
                 self.ids.toggle_sensing_label.color = (0, 1, 0, .8)
+
+    def port(self, port):
+        global switchPort
+        switchPort = port
+        self.ids.port_label.text = "Plug into port P" + str(port)
 
 
 class SwitchMethods1Screen(Screen):
     def back(self):
         global checking
         checking = False
-
         SCREEN_MANAGER.transition.direction = 'right'
         SCREEN_MANAGER.current = 'switches'
 
     def startThread(self):
+        print("recived on enter")
         global checking
+        global switchPort
+        switchPort = 6
         checking = True
         Thread(target=self.switchThread).start()
         Thread.daemon = True
 
     def switchThread(self):
+        global switchPort
         global checking
         while checking:
-            if (cyprus.read_gpio() & 0b0001):
+            if switchPort == 6:
+                val = 0b0001
+            elif switchPort == 7:
+                val = 0b0010
+            elif switchPort == 8:
+                val = 0b0100
+            print (val)
+            if (cyprus.read_gpio() & val):
                 sleep(.1)
-                if (cyprus.read_gpio() & 0b0001):
+                if (cyprus.read_gpio() & val):
                     self.ids.toggle_sensing_label.text = "Not Sensing"
                     self.ids.toggle_sensing_label.color = (1, 0, 0, .8)
             else:
                 self.ids.toggle_sensing_label.text = "Sensing"
                 self.ids.toggle_sensing_label.color = (0, 1, 0, .8)
 
-
+    def port(self, port):
+        global switchPort
+        switchPort = port
+        self.ids.port_label.text = "Plug into port P" + str(port)
 class ServoMethodsScreen(Screen):
     def back(self):
         SCREEN_MANAGER.transition.direction = 'right'
@@ -308,6 +336,8 @@ class TalonMethodsScreen(Screen):
                 num = 55
             elif num == 45:
                 num = 50
+            elif num == 100:
+                num = 100
             else:
                 num += 1
                 print("Plus: " + str(num))
@@ -316,6 +346,8 @@ class TalonMethodsScreen(Screen):
                 num = 45
             elif num == 55:
                 num = 50
+            elif num == 0:
+                num = 0
             else:
                 num -= 1
                 print("Minus: " + str(num))
@@ -372,21 +404,21 @@ class CytronMethodsScreen(Screen):
             self.ids.cytron_label.text = "Forward 50.0"
             self.ids.PWM_slider.value = 100
             self.ids.cytron_label.color = (0, 1, 0, .8)
-            cyprus.set_pwm_values(2, period_value=100000, compare_value=100000,
+            cyprus.set_pwm_values(2, period_value=10000, compare_value=10000,
                                   compare_mode=cyprus.LESS_THAN_OR_EQUAL)
 
         elif cmd == "back":
             self.ids.cytron_label.text = "Backward 50.0"
             self.ids.PWM_slider.value = 0
             self.ids.cytron_label.color = (1, 0, 0, .8)
-            cyprus.set_pwm_values(2, period_value=100000, compare_value=100000,
+            cyprus.set_pwm_values(2, period_value=10000, compare_value=10000,
                                   compare_mode=cyprus.LESS_THAN_OR_EQUAL)
 
         else:
             self.ids.cytron_label.text = "Neutral"
             self.ids.PWM_slider.value = 50
             self.ids.cytron_label.color = (1, .65, 0, .8)
-            cyprus.set_pwm_values(2, period_value=100000, compare_value=0,
+            cyprus.set_pwm_values(2, period_value=10000, compare_value=0,
                                   compare_mode=cyprus.LESS_THAN_OR_EQUAL)
 
     def tickArrows(self, way):
@@ -399,6 +431,8 @@ class CytronMethodsScreen(Screen):
                 num = 55
             elif num == 45:
                 num = 50
+            elif num == 100:
+                num = 100
             else:
                 num += 1
                 print("Plus: " + str(num))
@@ -407,6 +441,8 @@ class CytronMethodsScreen(Screen):
                 num = 45
             elif num == 55:
                 num = 50
+            elif num == 0:
+                num = 0
             else:
                 num -= 1
                 print("Minus: " + str(num))
@@ -420,15 +456,19 @@ class CytronMethodsScreen(Screen):
             self.ids.cytron_label.text = s
             self.ids.cytron_label.color = (0, 1, 0, .8)
             self.ids.PWM_slider.value = num
-            val = (self.ids.PWM_slider.value - 50) * 2000
+            val = (self.ids.PWM_slider.value - 50) * 200
+            direction = 1
         else:
             s = "Backward " + str(num - 50)
             self.ids.cytron_label.text = s
             self.ids.cytron_label.color = (1, 0, 0, .8)
             self.ids.PWM_slider.value = num
-            num = num + 3
-        val = (self.ids.PWM_slider.value - 50) * 2000
-        cyprus.set_pwm_values(2, period_value=100000, compare_value=val,
+            val = (50 - self.ids.PWM_slider.value) * 200
+            direction = 0
+
+        print(self.ids.PWM_slider.value)
+        print(val)
+        cyprus.set_pwm_values(2, period_value=10000, compare_value=val,
                               compare_mode=cyprus.LESS_THAN_OR_EQUAL)
 
 
