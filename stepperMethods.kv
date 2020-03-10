@@ -54,7 +54,7 @@
         x: (root.width * 0.85) - 175
         y: root.height * 0.12
         color: .8, 0, 0, 1
-        on_press: root.setSpeed("slow")
+        on_press: root.setSpeed("stop")
 
     DPEAButton:
         text: "Run"
@@ -62,7 +62,7 @@
         x: (root.width * 0.15) - 175
         y: root.height * 0.12
         color: 0, .8, 0, 1
-        on_press: root.setSpeed("fast")
+        on_press: root.setSpeed("run")
 
     DPEAButton:
         text: "Port 0"
@@ -116,7 +116,7 @@
         size: 200, 130
         x: (root.width * 0.18) - 75
         y: root.height * 0.4
-        on_press: motorControl("toggleDir")
+        on_press: root.speedControl("toggleDir")
 
 
     DPEAButton:
@@ -136,9 +136,8 @@
         y: 0
         min: 0
         max: 100
-        value: 50
         step: 1
-        on_touch_up: root.updateLabel("microstep")
+        on_touch_up: root.bottomControl("microstep")
 
 
     Slider:
@@ -146,9 +145,89 @@
         size_hint_x: .4
         size_hint_y: .1
         x: root.width * 0.3
-        y: root.width * 0.2
+        y: root.height * 0.1
         min: 0
         max: 100
-        value: 50
         step: 1
-        on_touch_up: root.updateLabel("length")
+        on_touch_up: root.bottomControl("legnth")
+
+
+    Label:
+        text: "Microsteps: 0"
+        id: microstep_label
+        size: 100, 100
+        font_size: 30
+        pos_hint:{"y": -.32,"x": 0}
+        color: 0, 0, 0, .5
+
+    Label:
+        text: "Steps: 0"
+        id: legnth_label
+        size: 100, 100
+        font_size: 30
+        pos_hint:{"y": -.42,"x": 0}
+        color: 0, 0, 0, .5
+
+
+    Slider:
+        id: speed_slider
+        size_hint_x: .1
+        size_hint_y: .4
+        x: root.width * 0.7
+        y: root.height * 0.4
+        orientation: 'vertical'
+        min: 0
+        max: 100
+        step: 1
+        on_touch_down: root.speedControl("speed")
+
+
+    Slider:
+        id: acell_slider
+        size_hint_x: .1
+        size_hint_y: .4
+        x: root.width * 0.8
+        y: root.height * 0.4
+        orientation: 'vertical'
+        min: 0
+        max: 100
+        step: 1
+        on_touch_down: root.speedControl("acell")
+
+
+    Slider:
+        id: decell_slider
+        size_hint_x: .1
+        size_hint_y: .4
+        x: root.width * 0.9
+        y: root.height * 0.4
+        orientation: 'vertical'
+        min: 0
+        max: 100
+        step: 1
+        on_touch_down: root.speedControl("acell")
+
+
+    Label:
+        text: "Speed: 0"
+        id: legnth_label
+        size: 100, 100
+        font_size: 30
+        pos_hint:{"y": -.2,"x": .2}
+        color: 0, 0, 0, .5
+
+    Label:
+        text: "Acceleration: 0"
+        id: microstep_label
+        size: 100, 100
+        font_size: 30
+        pos_hint:{"y": .4,"x": .3}
+        color: 0, 0, 0, .5
+
+    Label:
+        text: "Deceleration: 0"
+        id: legnth_label
+        size: 100, 100
+        font_size: 30
+        pos_hint:{"y": -.2,"x": .4}
+        color: 0, 0, 0, .5
