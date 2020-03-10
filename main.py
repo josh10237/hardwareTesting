@@ -35,6 +35,8 @@ SCREEN_MANAGER = ScreenManager()
 MAIN_SCREEN_NAME = 'main'
 cyprus.initialize()
 global switchPort
+global stepperPort
+stepperPort = 0
 
 class ProjectNameGUI(App):
     """
@@ -160,7 +162,6 @@ class SwitchMethodsScreen(Screen):
         SCREEN_MANAGER.current = 'switches'
 
     def startThread(self):
-        print("recived on enter")
         global checking
         global switchPort
         switchPort = 6
@@ -283,7 +284,7 @@ class ServoMethodsScreen(Screen):
 class StepperMethodsScreen(Screen):
 
     def setSpeed(self, speed):
-        s1 = stepper(port=0, micro_steps=32, hold_current=20, run_current=20, accel_current=20, deaccel_current=20,
+        s1 = stepper(port=stepperPort, micro_steps=32, hold_current=20, run_current=20, accel_current=20, deaccel_current=20,
                      steps_per_unit=200, speed=8)
         if speed == "fast":
             s1.set_speed(8)
@@ -293,19 +294,25 @@ class StepperMethodsScreen(Screen):
             s1.start_relative_move(5)
 
     def back(self):
-        s1 = stepper(port=0, micro_steps=32, hold_current=20, run_current=20, accel_current=20, deaccel_current=20,
+        s1 = stepper(port=stepperPort, micro_steps=32, hold_current=20, run_current=20, accel_current=20, deaccel_current=20,
                      steps_per_unit=200, speed=8)
         SCREEN_MANAGER.transition.direction = 'right'
         SCREEN_MANAGER.current = "motors"
         s1.free()
 
     def one(self, dir):
-        s1 = stepper(port=0, micro_steps=32, hold_current=20, run_current=20, accel_current=20, deaccel_current=20,
+        s1 = stepper(port=stepperPort, micro_steps=32, hold_current=20, run_current=20, accel_current=20, deaccel_current=20,
                      steps_per_unit=200, speed=8)
         if dir == "for":
             s1.start_relative_move(1)
         else:
             s1.start_relative_move(-1)
+
+    def port(self, port):
+        global stepperPort
+        stepperPort = port
+        self.ids.port_label.text = "Plug into port " + str(port)
+
 
 
 class TalonMethodsScreen(Screen):

@@ -7,6 +7,7 @@
 
 <StepperMethodsScreen>:
     name: 'stepperMethods'
+    #on_enter: setDefaultPort()
     FloatLayout:
         size_hint: None, None
 
@@ -28,6 +29,7 @@
 
     Label:
         text: "Plug into port 0"
+        id: port_label
         size: 100, 100
         font_size: 50
         pos_hint:{"y":.3,"x": 0}
@@ -47,36 +49,20 @@
         y: root.height * 0.48
 
     DPEAButton:
-        text: "Test slow"
-        size: 500, 100
-        x: (root.width * 0.3) - 250
-        y: root.height * 0.05
-        color: 1, 0, 0, 1
+        text: "Stop"
+        size: 350, 100
+        x: (root.width * 0.85) - 175
+        y: root.height * 0.12
+        color: .8, 0, 0, 1
         on_press: root.setSpeed("slow")
 
     DPEAButton:
-        text: "Test Fast"
-        size: 500, 100
-        x: (root.width * 0.3) - 250
-        y: root.height * 0.25
-        color: 0, 1, 0, 1
+        text: "Run"
+        size: 350, 100
+        x: (root.width * 0.15) - 175
+        y: root.height * 0.12
+        color: 0, .8, 0, 1
         on_press: root.setSpeed("fast")
-
-    DPEAButton:
-        text: "Move forward"
-        size: 500, 100
-        x: (root.width * 0.7) - 250
-        y: root.height * 0.25
-        color: 1, 0, .5, 1
-        on_press: root.one("for")
-
-    DPEAButton:
-        text: "Move back"
-        size: 500, 100
-        x: (root.width * 0.7) - 250
-        y: root.height * 0.05
-        color: .5, .5, 1, 1
-        on_press: root.one("back")
 
     DPEAButton:
         text: "Port 0"
@@ -84,7 +70,7 @@
         x: (root.width * 0.1)- 125
         y: root.height * 0.72
         color: .6, .6, .6, .6
-        on_press: root.port(6)
+        on_press: root.port(0)
 
     DPEAButton:
         text: "Port 1"
@@ -92,7 +78,7 @@
         x: (root.width * 0.28) - 125
         y: root.height * 0.72
         color: .6, .6, .6, .6
-        on_press: root.port(7)
+        on_press: root.port(1)
 
     DPEAButton:
         text: "Port 2"
@@ -100,7 +86,7 @@
         x: (root.width * 0.1) - 125
         y: root.height * 0.62
         color: .6, .6, .6, .6
-        on_press: root.port(8)
+        on_press: root.port(2)
 
     DPEAButton:
         text: "Port 3"
@@ -108,7 +94,7 @@
         x: (root.width * 0.28) - 125
         y: root.height * 0.62
         color: .6, .6, .6, .6
-        on_press: root.port(8)
+        on_press: root.port(3)
 
     Label:
         text: "Toggle Direction"
@@ -123,3 +109,46 @@
         font_size: 30
         pos_hint:{"y": .33,"x": -.3}
         color: 0, 0, 0, .5
+
+
+    ImageButton:
+        source: "cw.png"
+        size: 200, 130
+        x: (root.width * 0.18) - 75
+        y: root.height * 0.4
+        on_press: motorControl("toggleDir")
+
+
+    DPEAButton:
+        text: "Steps"
+        size: 400, 100
+        x: (root.width * 0.5) - 200
+        y: root.height * 0.25
+        color: .8, .6, .8, 1
+        on_press: root.port(3)
+
+
+    Slider:
+        id: microstep_slider
+        size_hint_x: .4
+        size_hint_y: .1
+        x: root.width * 0.3
+        y: 0
+        min: 0
+        max: 100
+        value: 50
+        step: 1
+        on_touch_up: root.updateLabel("microstep")
+
+
+    Slider:
+        id: length_slider
+        size_hint_x: .4
+        size_hint_y: .1
+        x: root.width * 0.3
+        y: root.width * 0.2
+        min: 0
+        max: 100
+        value: 50
+        step: 1
+        on_touch_up: root.updateLabel("length")
