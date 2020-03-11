@@ -77,19 +77,17 @@ class MainScreen(Screen):
                 cyprus.set_pwm_values(1, period_value=100000, compare_value=50000,
                                       compare_mode=cyprus.LESS_THAN_OR_EQUAL)
                 sleep(.1)
-                print("yeepie")
             else:
                 cyprus.set_pwm_values(1, period_value=100000, compare_value=0,
                                       compare_mode=cyprus.LESS_THAN_OR_EQUAL)
                 sleep(.1)
-                print("yeepie 1")
 
     def cyp(self):
+        pass
         # cyprus.close()
         # cyprus.initialize()
         # cyprus.setup_servo(2)
         # cyprus.set_servo_position(2, .5)
-        print("on enter")
 
     def motorpressed(self):
         SCREEN_MANAGER.transition.direction = 'left'
@@ -179,7 +177,6 @@ class SwitchMethodsScreen(Screen):
                 val = 0b0010
             elif switchPort == 8:
                 val = 0b0100
-            print (val)
             if (cyprus.read_gpio() & val):
                 sleep(.1)
                 if (cyprus.read_gpio() & val):
@@ -203,7 +200,6 @@ class SwitchMethods1Screen(Screen):
         SCREEN_MANAGER.current = 'switches'
 
     def startThread(self):
-        print("recived on enter")
         global checking
         global switchPort
         switchPort = 6
@@ -221,7 +217,6 @@ class SwitchMethods1Screen(Screen):
                 val = 0b0010
             elif switchPort == 8:
                 val = 0b0100
-            print (val)
             if (cyprus.read_gpio() & val):
                 sleep(.1)
                 if (cyprus.read_gpio() & val):
@@ -308,7 +303,58 @@ class StepperMethodsScreen(Screen):
             pass
         micro_steps = self.ids.microstep_slider.value
 
+    def toggleDir(self):
+        if self.ids.dir_button.source == 'cw.png':
+            self.ids.dir_button.source = 'ccw.png'
+        else:
+            self.ids.dir_button.source = 'cw.png'
 
+    def speed(self):
+        print("speed")
+        self.ids.speed_label.text = "Speed: " + str(self.ids.speed_slider.value)
+
+    def acell(self):
+        print("acell")
+        self.ids.acell_label.text = "Acceleration: " + str(self.ids.acell_slider.value)
+
+    def decell(self):
+        print("decell")
+        self.ids.decell_label.text = "Deceleration: " + str(self.ids.decell_slider.value)
+
+
+    def microstep(self):
+        print("microstep")
+        self.ids.microstep_label.text = "Microsteps: " + str(self.ids.microstep_slider.value)
+
+    def length(self):
+        print("length")
+        self.ids.length_label.text = "Steps: " + str(self.ids.length_slider.value)
+
+
+
+    # def speedControl(self, param):
+    #     print("speed control")
+    #     if param == "toggleDir":
+    #
+    #     elif param == "speed":
+    #         print("speed")
+    #         self.ids.speed_label.text = "Speed: " + str(self.ids.speed_slider.value)
+    #     elif param == "acell":
+    #         print("acell")
+    #         self.ids.acell_label.text = "Acceleration: " + str(self.ids.acell_slider.value)
+    #     elif param == "decell":
+    #         print("decell")
+    #         self.ids.decell_label.text = "Deceleration: " + str(self.ids.decell_slider.value)
+
+
+    # def bottomControl(self, param):
+    #     print("bottom control")
+    #     if param == "microstep":
+    #         print("microstep")
+    #         self.ids.microstep_label.text = "Microsteps: " + str(self.ids.microstep_slider.value)
+    #     elif param == "length":
+    #         print("length")
+    #         self.ids.length_label.text = "Steps: " + str(self.ids.length_slider.value)
 
 
     # def one(self, dir):
@@ -376,7 +422,6 @@ class TalonMethodsScreen(Screen):
         cyprus.initialize()
         cyprus.setup_servo(2)
         num = self.ids.PWM_slider.value
-        print("First: " + str(num))
         if way == "up":
             if self.ids.talon_label.text == "Neutral":
                 num = 55
@@ -386,7 +431,6 @@ class TalonMethodsScreen(Screen):
                 num = 100
             else:
                 num += 1
-                print("Plus: " + str(num))
         elif way == "down":
             if self.ids.talon_label.text == "Neutral":
                 num = 45
@@ -396,7 +440,6 @@ class TalonMethodsScreen(Screen):
                 num = 0
             else:
                 num -= 1
-                print("Minus: " + str(num))
         spd = num / 100
         if (num > 45) and (num < 55):
             self.ids.talon_label.text = "Neutral"
@@ -471,7 +514,6 @@ class CytronMethodsScreen(Screen):
         cyprus.initialize()
         cyprus.setup_servo(2)
         num = self.ids.PWM_slider.value
-        print("First: " + str(num))
         if way == "up":
             if self.ids.cytron_label.text == "Neutral":
                 num = 55
@@ -481,7 +523,6 @@ class CytronMethodsScreen(Screen):
                 num = 100
             else:
                 num += 1
-                print("Plus: " + str(num))
         elif way == "down":
             if self.ids.cytron_label.text == "Neutral":
                 num = 45
@@ -491,7 +532,6 @@ class CytronMethodsScreen(Screen):
                 num = 0
             else:
                 num -= 1
-                print("Minus: " + str(num))
         if (num > 45) and (num < 55):
             self.ids.cytron_label.text = "Neutral"
             self.ids.cytron_label.color = (1, .65, 0, .8)
@@ -512,8 +552,7 @@ class CytronMethodsScreen(Screen):
             val = (50 - self.ids.PWM_slider.value) * 200
             direction = 0
 
-        print(self.ids.PWM_slider.value)
-        print(val)
+
         cyprus.set_pwm_values(2, period_value=10000, compare_value=val,
                               compare_mode=cyprus.LESS_THAN_OR_EQUAL)
 

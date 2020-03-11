@@ -113,10 +113,11 @@
 
     ImageButton:
         source: "cw.png"
+        id: dir_button
         size: 200, 130
         x: (root.width * 0.18) - 75
         y: root.height * 0.4
-        on_press: root.speedControl("toggleDir")
+        on_press: root.speed()
 
 
     DPEAButton:
@@ -129,7 +130,7 @@
 
 
     Slider:
-        id: microstep_slider
+        id: length_slider
         size_hint_x: .4
         size_hint_y: .1
         x: root.width * 0.3
@@ -137,11 +138,11 @@
         min: 0
         max: 100
         step: 1
-        on_touch_up: root.bottomControl("microstep")
+        on_touch_down: root.bottomControl("microstep")
 
 
     Slider:
-        id: length_slider
+        id: microstep_slider
         size_hint_x: .4
         size_hint_y: .1
         x: root.width * 0.3
@@ -149,7 +150,7 @@
         min: 0
         max: 100
         step: 1
-        on_touch_up: root.bottomControl("legnth")
+        on_touch_down: root.bottomControl("length")
 
 
     Label:
@@ -162,7 +163,7 @@
 
     Label:
         text: "Steps: 0"
-        id: legnth_label
+        id: length_label
         size: 100, 100
         font_size: 30
         pos_hint:{"y": -.42,"x": 0}
@@ -173,7 +174,7 @@
         id: speed_slider
         size_hint_x: .1
         size_hint_y: .4
-        x: root.width * 0.7
+        x: root.width * 0.67
         y: root.height * 0.4
         orientation: 'vertical'
         min: 0
@@ -186,7 +187,7 @@
         id: acell_slider
         size_hint_x: .1
         size_hint_y: .4
-        x: root.width * 0.8
+        x: root.width * 0.77
         y: root.height * 0.4
         orientation: 'vertical'
         min: 0
@@ -199,35 +200,35 @@
         id: decell_slider
         size_hint_x: .1
         size_hint_y: .4
-        x: root.width * 0.9
+        x: root.width * 0.87
         y: root.height * 0.4
         orientation: 'vertical'
         min: 0
         max: 100
         step: 1
-        on_touch_down: root.speedControl("acell")
+        on_touch_down: root.speedControl("decell")
 
 
     Label:
         text: "Speed: 0"
-        id: legnth_label
+        id: speed_label
         size: 100, 100
         font_size: 30
-        pos_hint:{"y": -.2,"x": .2}
+        pos_hint:{"y": -.15,"x": .22}
         color: 0, 0, 0, .5
 
     Label:
         text: "Acceleration: 0"
-        id: microstep_label
+        id: acell_label
         size: 100, 100
         font_size: 30
-        pos_hint:{"y": .4,"x": .3}
+        pos_hint:{"y": .35,"x": .32}
         color: 0, 0, 0, .5
 
     Label:
         text: "Deceleration: 0"
-        id: legnth_label
+        id: decell_label
         size: 100, 100
         font_size: 30
-        pos_hint:{"y": -.2,"x": .4}
+        pos_hint:{"y": -.15,"x": .42}
         color: 0, 0, 0, .5
