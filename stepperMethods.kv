@@ -7,7 +7,7 @@
 
 <StepperMethodsScreen>:
     name: 'stepperMethods'
-    #on_enter: setDefaultPort()
+    on_enter: root.startThread()
     FloatLayout:
         size_hint: None, None
 
@@ -117,7 +117,7 @@
         size: 200, 130
         x: (root.width * 0.18) - 75
         y: root.height * 0.4
-        on_press: root.speed()
+        on_press: root.toggleDir()
 
 
     DPEAButton:
@@ -138,7 +138,7 @@
         min: 0
         max: 100
         step: 1
-        on_touch_down: root.bottomControl("microstep")
+#        on_touch_down: root.length()
 
 
     Slider:
@@ -150,7 +150,7 @@
         min: 0
         max: 100
         step: 1
-        on_touch_down: root.bottomControl("length")
+#        on_touch_down: root.microstep()
 
 
     Label:
@@ -180,7 +180,7 @@
         min: 0
         max: 100
         step: 1
-        on_touch_down: root.speedControl("speed")
+#        on_touch_down: root.speed()
 
 
     Slider:
@@ -193,8 +193,7 @@
         min: 0
         max: 100
         step: 1
-        on_touch_down: root.speedControl("acell")
-
+#        on_touch_down: root.acell()
 
     Slider:
         id: decell_slider
@@ -206,7 +205,7 @@
         min: 0
         max: 100
         step: 1
-        on_touch_down: root.speedControl("decell")
+#        on_touch_down: root.decell()
 
 
     Label:

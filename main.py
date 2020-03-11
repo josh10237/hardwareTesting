@@ -288,11 +288,30 @@ class StepperMethodsScreen(Screen):
     #         s1.set_speed(2)
     #         s1.start_relative_move(5)
 
+    def startThread(self):
+        global checkingSliders
+        checkingSliders = True
+        Thread(target=self.sliderThread).start()
+        Thread.daemon = True
+
+    def sliderThread(self):
+        global checkingSliders
+        while checkingSliders:
+            self.ids.speed_label.text = "Speed: " + str(self.ids.speed_slider.value)
+            self.ids.acell_label.text = "Acceleration: " + str(self.ids.acell_slider.value)
+            self.ids.decell_label.text = "Deceleration: " + str(self.ids.decell_slider.value)
+            self.ids.microstep_label.text = "Microsteps: " + str(self.ids.microstep_slider.value)
+            self.ids.length_label.text = "Steps: " + str(self.ids.length_slider.value)
+
+
+
     def back(self):
+        global checkingSliders
         s1 = stepper(port=stepperPort, micro_steps=32, hold_current=20, run_current=20, accel_current=20, deaccel_current=20,
                      steps_per_unit=200, speed=8)
         SCREEN_MANAGER.transition.direction = 'right'
         SCREEN_MANAGER.current = "motors"
+        checkingSliders = False
         s1.free()
 
 
@@ -309,26 +328,26 @@ class StepperMethodsScreen(Screen):
         else:
             self.ids.dir_button.source = 'cw.png'
 
-    def speed(self):
-        print("speed")
-        self.ids.speed_label.text = "Speed: " + str(self.ids.speed_slider.value)
-
-    def acell(self):
-        print("acell")
-        self.ids.acell_label.text = "Acceleration: " + str(self.ids.acell_slider.value)
-
-    def decell(self):
-        print("decell")
-        self.ids.decell_label.text = "Deceleration: " + str(self.ids.decell_slider.value)
-
-
-    def microstep(self):
-        print("microstep")
-        self.ids.microstep_label.text = "Microsteps: " + str(self.ids.microstep_slider.value)
-
-    def length(self):
-        print("length")
-        self.ids.length_label.text = "Steps: " + str(self.ids.length_slider.value)
+    # def speed(self):
+    #     print("speed")
+    #     self.ids.speed_label.text = "Speed: " + str(self.ids.speed_slider.value)
+    #
+    # def acell(self):
+    #     print("acell")
+    #     self.ids.acell_label.text = "Acceleration: " + str(self.ids.acell_slider.value)
+    #
+    # def decell(self):
+    #     print("decell")
+    #     self.ids.decell_label.text = "Deceleration: " + str(self.ids.decell_slider.value)
+    #
+    #
+    # def microstep(self):
+    #     print("microstep")
+    #     self.ids.microstep_label.text = "Microsteps: " + str(self.ids.microstep_slider.value)
+    #
+    # def length(self):
+    #     print("length")
+    #     self.ids.length_label.text = "Steps: " + str(self.ids.length_slider.value)
 
 
 
