@@ -54,7 +54,7 @@
         x: (root.width * 0.85) - 175
         y: root.height * 0.12
         color: .8, 0, 0, 1
-        on_press: root.setSpeed("stop")
+        on_press: root.runControl("stop")
 
     DPEAButton:
         text: "Run"
@@ -62,7 +62,7 @@
         x: (root.width * 0.15) - 175
         y: root.height * 0.12
         color: 0, .8, 0, 1
-        on_press: root.setSpeed("run")
+        on_press: root.runControl("run")
 
     DPEAButton:
         text: "Port 0"
@@ -122,11 +122,12 @@
 
     DPEAButton:
         text: "Steps"
+        id: length_mode_button
         size: 400, 100
         x: (root.width * 0.5) - 200
         y: root.height * 0.25
         color: .8, .6, .8, 1
-        on_press: root.port(3)
+        on_press: root.toggleLegnthMode()
 
 
     Slider:
@@ -136,9 +137,8 @@
         x: root.width * 0.3
         y: 0
         min: 0
-        max: 100
+        max: 1000
         step: 1
-#        on_touch_down: root.length()
 
 
     Slider:
@@ -148,9 +148,8 @@
         x: root.width * 0.3
         y: root.height * 0.1
         min: 0
-        max: 100
+        max: 128
         step: 1
-#        on_touch_down: root.microstep()
 
 
     Label:
@@ -180,7 +179,6 @@
         min: 0
         max: 100
         step: 1
-#        on_touch_down: root.speed()
 
 
     Slider:
@@ -193,7 +191,6 @@
         min: 0
         max: 100
         step: 1
-#        on_touch_down: root.acell()
 
     Slider:
         id: decell_slider
@@ -205,7 +202,6 @@
         min: 0
         max: 100
         step: 1
-#        on_touch_down: root.decell()
 
 
     Label:

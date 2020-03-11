@@ -301,7 +301,10 @@ class StepperMethodsScreen(Screen):
             self.ids.acell_label.text = "Acceleration: " + str(self.ids.acell_slider.value)
             self.ids.decell_label.text = "Deceleration: " + str(self.ids.decell_slider.value)
             self.ids.microstep_label.text = "Microsteps: " + str(self.ids.microstep_slider.value)
-            self.ids.length_label.text = "Steps: " + str(self.ids.length_slider.value)
+            if self.ids.length_mode_button.text == "Steps":
+                self.ids.length_label.text = "Steps: " + str(self.ids.length_slider.value)
+            else:
+                self.ids.length_label.text = "Rotations: " + str(self.ids.length_slider.value)
 
 
 
@@ -319,61 +322,26 @@ class StepperMethodsScreen(Screen):
         s1 = stepper(port=stepperPort, micro_steps=32, hold_current=20, run_current=20, accel_current=20,
                      deaccel_current=20, steps_per_unit=200, speed=8)
         if param == "stop":
-            pass
+            s1.hard_stop()
+            s1.free()
         micro_steps = self.ids.microstep_slider.value
+        speed = self.ids.speed_slider.value
+        acceleration = self.ids.acell_slider.value
+        deceleration = self.ids.decell_slider.value
+        if self.ids.dir_button.source == 'cw.png':
+            direction = 1
+        else:
+            direction = -1
+
+        s1.set_accel(acceleration)
+        s1.set_deaccel(deceleration)
+
 
     def toggleDir(self):
         if self.ids.dir_button.source == 'cw.png':
             self.ids.dir_button.source = 'ccw.png'
         else:
             self.ids.dir_button.source = 'cw.png'
-
-    # def speed(self):
-    #     print("speed")
-    #     self.ids.speed_label.text = "Speed: " + str(self.ids.speed_slider.value)
-    #
-    # def acell(self):
-    #     print("acell")
-    #     self.ids.acell_label.text = "Acceleration: " + str(self.ids.acell_slider.value)
-    #
-    # def decell(self):
-    #     print("decell")
-    #     self.ids.decell_label.text = "Deceleration: " + str(self.ids.decell_slider.value)
-    #
-    #
-    # def microstep(self):
-    #     print("microstep")
-    #     self.ids.microstep_label.text = "Microsteps: " + str(self.ids.microstep_slider.value)
-    #
-    # def length(self):
-    #     print("length")
-    #     self.ids.length_label.text = "Steps: " + str(self.ids.length_slider.value)
-
-
-
-    # def speedControl(self, param):
-    #     print("speed control")
-    #     if param == "toggleDir":
-    #
-    #     elif param == "speed":
-    #         print("speed")
-    #         self.ids.speed_label.text = "Speed: " + str(self.ids.speed_slider.value)
-    #     elif param == "acell":
-    #         print("acell")
-    #         self.ids.acell_label.text = "Acceleration: " + str(self.ids.acell_slider.value)
-    #     elif param == "decell":
-    #         print("decell")
-    #         self.ids.decell_label.text = "Deceleration: " + str(self.ids.decell_slider.value)
-
-
-    # def bottomControl(self, param):
-    #     print("bottom control")
-    #     if param == "microstep":
-    #         print("microstep")
-    #         self.ids.microstep_label.text = "Microsteps: " + str(self.ids.microstep_slider.value)
-    #     elif param == "length":
-    #         print("length")
-    #         self.ids.length_label.text = "Steps: " + str(self.ids.length_slider.value)
 
 
     # def one(self, dir):
@@ -388,6 +356,14 @@ class StepperMethodsScreen(Screen):
         global stepperPort
         stepperPort = port
         self.ids.port_label.text = "Plug into port " + str(port)
+
+    def toggleLegnthMode(self):
+        if self.ids.length_mode_button.text == "Steps":
+            self.ids.length_mode_button.text = "Rotations"
+            self.ids.length_slider.max = 10
+        else:
+            self.ids.length_mode_button.text = "Steps"
+            self.ids.length_slider.max = 1000
 
 
 
