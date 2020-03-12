@@ -38,6 +38,7 @@ global switchPort
 global stepperPort
 stepperPort = 0
 
+
 class ProjectNameGUI(App):
     """
     Class to handle running the GUI Application
@@ -55,39 +56,6 @@ Window.clearcolor = (1, 1, 1, 1)  # White
 
 
 class MainScreen(Screen):
-    global servoPos
-    servoPos = 1
-
-    def talonThread(self):
-        global talon
-        while talon:
-            if (cyprus.read_gpio() & 0b0001):
-                sleep(.1)
-                if (cyprus.read_gpio() & 0b0001):
-                    cyprus.set_pwm_values(1, period_value=100000, compare_value=50000,
-                                          compare_mode=cyprus.LESS_THAN_OR_EQUAL)
-                    cyprus.set_servo_position(1, 1)
-            else:
-                cyprus.set_servo_position(1, .5)
-
-    def cytronThread(self):
-        global cytron
-        while cytron:
-            if (cyprus.read_gpio() & 0b0010):
-                cyprus.set_pwm_values(1, period_value=100000, compare_value=50000,
-                                      compare_mode=cyprus.LESS_THAN_OR_EQUAL)
-                sleep(.1)
-            else:
-                cyprus.set_pwm_values(1, period_value=100000, compare_value=0,
-                                      compare_mode=cyprus.LESS_THAN_OR_EQUAL)
-                sleep(.1)
-
-    def cyp(self):
-        pass
-        # cyprus.close()
-        # cyprus.initialize()
-        # cyprus.setup_servo(2)
-        # cyprus.set_servo_position(2, .5)
 
     def motorpressed(self):
         SCREEN_MANAGER.transition.direction = 'left'
@@ -145,7 +113,6 @@ class MotorScreen(Screen):
     def lefty(self):
         SCREEN_MANAGER.transition.direction = 'left'
         SCREEN_MANAGER.current = "stepperMethods"
-        pass
 
     def righty(self):
         SCREEN_MANAGER.transition.direction = 'left'
@@ -230,6 +197,8 @@ class SwitchMethods1Screen(Screen):
         global switchPort
         switchPort = port
         self.ids.port_label.text = "Plug into port P" + str(port)
+
+
 class ServoMethodsScreen(Screen):
     def back(self):
         SCREEN_MANAGER.transition.direction = 'right'
@@ -268,25 +237,14 @@ class ServoMethodsScreen(Screen):
             self.ids.servo_slider.value = 50
         val = self.ids.servo_slider.value
         self.ids.percent_label.text = str(val) + "%"
-        cyprus.set_servo_position(1, val/100)
+        cyprus.set_servo_position(1, val / 100)
         if val > 50:
             servoPos = 1
         else:
             servoPos = 0
 
 
-
 class StepperMethodsScreen(Screen):
-
-    # def setSpeed(self, speed):
-    #     s1 = stepper(port=stepperPort, micro_steps=32, hold_current=20, run_current=20, accel_current=20, deaccel_current=20,
-    #                  steps_per_unit=200, speed=8)
-    #     if speed == "fast":
-    #         s1.set_speed(8)
-    #         s1.start_relative_move(5)
-    #     else:
-    #         s1.set_speed(2)
-    #         s1.start_relative_move(5)
 
     def startThread(self):
         global checkingSliders
@@ -306,28 +264,28 @@ class StepperMethodsScreen(Screen):
             else:
                 self.ids.length_label.text = "Rotations: " + str(self.ids.length_slider.value)
 
-
-
     def back(self):
         global checkingSliders
-        s1 = stepper(port=stepperPort, micro_steps=32, hold_current=20, run_current=20, accel_current=20, deaccel_current=20,
+        s1 = stepper(port=stepperPort, micro_steps=32, hold_current=20, run_current=20, accel_current=20,
+                     deaccel_current=20,
                      steps_per_unit=200, speed=8)
         SCREEN_MANAGER.transition.direction = 'right'
         SCREEN_MANAGER.current = "motors"
         checkingSliders = False
         s1.free()
 
-
     def runControl(self, param):
         s1 = stepper(port=stepperPort, micro_steps=32, hold_current=20, run_current=20, accel_current=20,
                      deaccel_current=20, steps_per_unit=200, speed=8)
         if param == "stop":
+            s1.start_relative_move(0)
             s1.hard_stop()
             s1.free()
+            return
         micro_steps = self.ids.microstep_slider.value
-        speed = self.ids.speed_slider.value
-        acceleration = self.ids.acell_slider.value
-        deceleration = self.ids.decell_slider.value
+        speed = self.ids.speed_slider.value / 10
+        acceleration = self.ids.acell_slider.value * 10
+        deceleration = self.ids.decell_slider.value * 10
         if self.ids.dir_button.source == 'cw.png':
             direction = 1
         else:
@@ -335,22 +293,18 @@ class StepperMethodsScreen(Screen):
 
         s1.set_accel(acceleration)
         s1.set_deaccel(deceleration)
-
+        s1.set_micro_steps(int(micro_steps))
+        s1.set_speed(speed)
+        if self.ids.length_mode_button.text == "Rotations":
+            s1.start_relative_move(int(direction * self.ids.length_slider.value))
+        else:
+            s1.move_steps(int(direction * self.ids.length_slider.value))
 
     def toggleDir(self):
         if self.ids.dir_button.source == 'cw.png':
             self.ids.dir_button.source = 'ccw.png'
         else:
             self.ids.dir_button.source = 'cw.png'
-
-
-    # def one(self, dir):
-    #     s1 = stepper(port=stepperPort, micro_steps=32, hold_current=20, run_current=20, accel_current=20, deaccel_current=20,
-    #                  steps_per_unit=200, speed=8)
-    #     if dir == "for":
-    #         s1.start_relative_move(1)
-    #     else:
-    #         s1.start_relative_move(-1)
 
     def port(self, port):
         global stepperPort
@@ -364,7 +318,6 @@ class StepperMethodsScreen(Screen):
         else:
             self.ids.length_mode_button.text = "Steps"
             self.ids.length_slider.max = 1000
-
 
 
 class TalonMethodsScreen(Screen):
@@ -472,15 +425,15 @@ class CytronMethodsScreen(Screen):
             s = "Forward " + str(abs(self.ids.PWM_slider.value) - 50)
             self.ids.cytron_label.text = s
             self.ids.cytron_label.color = (0, 1, 0, .8)
-            val = (self.ids.PWM_slider.value - 50) * 2000
+            val = (self.ids.PWM_slider.value - 50) * 200
             direction = 1
         else:
             s = "Backward " + str(abs(self.ids.PWM_slider.value) - 50)
             self.ids.cytron_label.text = s
             self.ids.cytron_label.color = (1, 0, 0, .8)
-            val = (50 - self.ids.PWM_slider.value) * 2000
+            val = (50 - self.ids.PWM_slider.value) * 200
             direction = 0
-        cyprus.set_pwm_values(2, period_value=100000, compare_value=val,
+        cyprus.set_pwm_values(2, period_value=10000, compare_value=val,
                               compare_mode=cyprus.LESS_THAN_OR_EQUAL)
 
     def buttonControl(self, cmd):
@@ -547,10 +500,8 @@ class CytronMethodsScreen(Screen):
             val = (50 - self.ids.PWM_slider.value) * 200
             direction = 0
 
-
         cyprus.set_pwm_values(2, period_value=10000, compare_value=val,
                               compare_mode=cyprus.LESS_THAN_OR_EQUAL)
-
 
 
 Builder.load_file('main.kv')

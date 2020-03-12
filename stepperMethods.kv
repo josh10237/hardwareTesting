@@ -136,6 +136,7 @@
         size_hint_y: .1
         x: root.width * 0.3
         y: 0
+        value: 5
         min: 0
         max: 1000
         step: 1
@@ -147,13 +148,14 @@
         size_hint_y: .1
         x: root.width * 0.3
         y: root.height * 0.1
+        value: 4
         min: 0
         max: 128
-        step: 1
+        step: 2
 
 
     Label:
-        text: "Microsteps: 0"
+        text: "Microsteps: 4"
         id: microstep_label
         size: 100, 100
         font_size: 30
@@ -161,7 +163,7 @@
         color: 0, 0, 0, .5
 
     Label:
-        text: "Steps: 0"
+        text: "Steps: 5"
         id: length_label
         size: 100, 100
         font_size: 30
@@ -176,6 +178,7 @@
         x: root.width * 0.67
         y: root.height * 0.4
         orientation: 'vertical'
+        value: 50
         min: 0
         max: 100
         step: 1
@@ -188,6 +191,7 @@
         x: root.width * 0.77
         y: root.height * 0.4
         orientation: 'vertical'
+        value: 50
         min: 0
         max: 100
         step: 1
@@ -199,13 +203,14 @@
         x: root.width * 0.87
         y: root.height * 0.4
         orientation: 'vertical'
+        value: 50
         min: 0
         max: 100
         step: 1
 
 
     Label:
-        text: "Speed: 0"
+        text: "Speed: 50"
         id: speed_label
         size: 100, 100
         font_size: 30
@@ -213,7 +218,7 @@
         color: 0, 0, 0, .5
 
     Label:
-        text: "Acceleration: 0"
+        text: "Acceleration: 50"
         id: acell_label
         size: 100, 100
         font_size: 30
@@ -221,7 +226,7 @@
         color: 0, 0, 0, .5
 
     Label:
-        text: "Deceleration: 0"
+        text: "Deceleration: 50"
         id: decell_label
         size: 100, 100
         font_size: 30
